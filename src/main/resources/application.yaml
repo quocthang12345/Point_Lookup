@@ -1,0 +1,12 @@
+server:
+    port: 8080
+logging:
+    level:
+      root: INFO
+spring:
+  datasource:
+    platform: postgres
+    url: jdbc:postgresql://localhost:5432/pointlookup
+    username: postgres
+    password: quocthang123
+    driverClassName: org.postgresql.Driver
