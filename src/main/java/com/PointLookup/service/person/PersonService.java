@@ -1,0 +1,81 @@
+package com.PointLookup.service.person;
+
+import java.util.List;
+
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.PointLookup.model.convert.PersonConvert;
+import com.PointLookup.model.dto.PersonDTO;
+import com.PointLookup.model.entity.PersonEntity;
+import com.PointLookup.repository.IAuthRepository;
+import com.PointLookup.repository.IPersonRepository;
+
+@Service
+public class PersonService implements IPersonService {
+	
+	@Autowired
+	private IPersonRepository personRepo;
+	
+	@Autowired
+	private IAuthRepository authRepo;
+	
+	@Autowired
+	private PersonConvert personConvert;
+	
+	@Override
+	public List<PersonEntity> findAll(){
+		return personRepo.findAll();
+	}	
+
+	@Transactional
+	@Override
+	public boolean deleteUserByUserName(String username) {
+		try {
+			personRepo.deleteByUserName(username);
+			return true;
+		}catch(Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+
+	}
+
+	@Transactional
+	@Override
+	public boolean updatePerson(PersonDTO personDto) {
+		try {
+			PersonEntity personExist = authRepo.findOneByUserNameAndStatus(personDto.getUserName(), 1);
+			if(personExist == null) {
+				return false;
+			}
+			personExist.setAddress(personDto.getAddress());
+			personExist.setAvatar(personDto.getAvatar());
+			personExist.setCity(personDto.getCity());
+			personExist.setFullName(personDto.getFullName());
+			personExist.setPhone(personDto.getPhone());
+			personExist.setStatus(personDto.getStatus());
+			personRepo.save(personExist);
+			return true;
+		}catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	@Override
+	public List<PersonEntity> findByStatus(int status) {
+		try {
+			List<PersonEntity> listPerson = personRepo.findByStatus(status);
+			if(listPerson == null) {
+				return null;
+			}
+			return listPerson;			
+		}catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+}

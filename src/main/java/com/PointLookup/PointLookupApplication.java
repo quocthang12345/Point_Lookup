@@ -10,13 +10,14 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
+/* @EnableSwagger2 */
 @EnableWebMvc
-@ComponentScan (basePackages = {"org.PointLookup"} ,includeFilters = {@Filter (type = FilterType.ANNOTATION, value = Configuration.class)})
-
+@ComponentScan (basePackages = {"com.PointLookup"} ,includeFilters = {@Filter (type = FilterType.ANNOTATION, value = Configuration.class)})
 public class PointLookupApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(PointLookupApplication.class, args);
 	}
+	
 
 }
