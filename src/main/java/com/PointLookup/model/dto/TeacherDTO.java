@@ -10,4 +10,6 @@ public class TeacherDTO {
 	private String teacher_id;
 	
 	private String homeroomClass;
+	
+	private String teacherCode;
 }

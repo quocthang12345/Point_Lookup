@@ -1,5 +1,7 @@
 package com.PointLookup.controller;
 
+import java.net.URI;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -9,17 +11,15 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 import com.PointLookup.model.dto.MyUserDetail;
 import com.PointLookup.model.dto.PersonDTO;
-import com.PointLookup.model.dto.StudentDTO;
-import com.PointLookup.model.dto.TeacherDTO;
 import com.PointLookup.model.entity.PersonEntity;
 import com.PointLookup.model.resource.ERole;
 import com.PointLookup.model.resource.LoginRequest;
@@ -168,8 +168,64 @@ public class AuthController {
 		}catch(Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<String>("Gửi lại Email xác thực thất bại", HttpStatus.BAD_REQUEST); 
-		}
-		
+		}		
+    }
+	
+	@ApiOperation(value = "Đăng nhập bằng Google", notes = "API này đăng nhập social với Google")
+	@GetMapping(
+			produces = {
+					MediaType.APPLICATION_JSON_VALUE
+			},
+			path = {"/api/signInGoogle"}
+	)
+    public ResponseEntity<String> loginWithGoogle(@RequestParam(value = "urlRedirect") String urlRedirect) {
+		try {
+			RestTemplate restTemplate = new RestTemplate();
+			String baseURL = "http://localhost:8080";
+			ResponseEntity<String> response = restTemplate.getForEntity(baseURL + "/oauth2/authorize/google?redirect_uri=" + urlRedirect, String.class);
+			return new ResponseEntity<String>(response.getHeaders().getLocation().toString(), HttpStatus.OK); 
+		}catch(Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<String>("Đăng nhập thất bại", HttpStatus.BAD_REQUEST); 
+		}		
+    }
+	
+	@ApiOperation(value = "Đăng nhập bằng Github", notes = "API này đăng nhập social với Github")
+	@GetMapping(
+			produces = {
+					MediaType.APPLICATION_JSON_VALUE
+			},
+			path = {"/api/signInGithub"}
+	)
+    public ResponseEntity<String> loginWithGithub(@RequestParam(value = "urlRedirect") String urlRedirect) {
+		try {
+			RestTemplate restTemplate = new RestTemplate();
+			String baseURL = "http://localhost:8080";
+			ResponseEntity<String> response = restTemplate.getForEntity(baseURL + "/oauth2/authorize/github?redirect_uri=" + urlRedirect, String.class);
+			return new ResponseEntity<String>(response.getHeaders().getLocation().toString(), HttpStatus.OK); 
+		}catch(Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<String>("Đăng nhập thất bại", HttpStatus.BAD_REQUEST); 
+		}		
+    }
+	
+	@ApiOperation(value = "Đăng nhập bằng Facebook", notes = "API này đăng nhập social với Facebook")
+	@GetMapping(
+			produces = {
+					MediaType.APPLICATION_JSON_VALUE
+			},
+			path = {"/api/signInFacebook"}
+	)
+    public ResponseEntity<String> loginWithFacebook(@RequestParam(value = "urlRedirect") String urlRedirect) {
+		try {
+			RestTemplate restTemplate = new RestTemplate();
+			String baseURL = "http://localhost:8080";
+			ResponseEntity<String> response = restTemplate.getForEntity(baseURL + "/oauth2/authorize/facebook?redirect_uri=" + urlRedirect, String.class);
+			return new ResponseEntity<String>(response.getHeaders().getLocation().toString(), HttpStatus.OK); 
+		}catch(Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<String>("Đăng nhập thất bại", HttpStatus.BAD_REQUEST); 
+		}		
     }
 	
 }

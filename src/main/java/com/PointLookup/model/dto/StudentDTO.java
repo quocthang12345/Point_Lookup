@@ -12,4 +12,6 @@ public class StudentDTO {
 	private String classAttend;
 	
 	private String marjorAttend;
+	
+	private String studentCode;
 }

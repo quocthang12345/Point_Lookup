@@ -11,4 +11,5 @@ import com.PointLookup.model.entity.PersonEntity;
 public interface IPersonRepository extends JpaRepository<PersonEntity, Long>{
 	void deleteByUserName(String userName);
 	List<PersonEntity> findByStatus(int status);
+	PersonEntity findByEmail(String email);
 }

@@ -30,6 +30,10 @@ public class TeacherEntity extends BaseEntity{
 	@Column(name = "listClassTeach")
 	private String homeroomClass;
 	
+	@ApiModelProperty(dataType = "String", value = "Mã giáo viên")
+	@Column(name = "teacherCode")
+	private String teacherCode;
+	
 	@JoinColumn(name = "teacher_id")
     @OneToOne(fetch = FetchType.LAZY)
 	private PersonEntity person;

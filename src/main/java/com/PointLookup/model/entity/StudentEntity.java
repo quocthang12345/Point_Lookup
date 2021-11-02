@@ -26,6 +26,10 @@ public class StudentEntity extends BaseEntity{
 	@Column(name = "marjorAttend")
 	private String marjorAttend;
 	
+	@ApiModelProperty(dataType = "String", value = "Mã sinh viên")
+	@Column(name = "studentCode")
+	private String studentCode;
+	
 	@JoinColumn(name = "student_id")
     @OneToOne(fetch = FetchType.LAZY)
 	private PersonEntity person;

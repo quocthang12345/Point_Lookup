@@ -1,5 +1,11 @@
 server:
-    port: 8080
+    port: 8443
+    ssl:
+      enabled: true
+      key-store-type: PKCS12
+      key-store: /home/quocthang12/Desktop/Point_Lookup/src/main/resources/point-lookup.p12
+      key-store-password: quocthang123
+      key-alias: point-lookup
 logging:
     level:
       root: INFO
@@ -57,5 +63,3 @@ spring:
               authorizationUri: https://www.facebook.com/v11.0/dialog/oauth
               tokenUri: https://graph.facebook.com/v11.0/oauth/access_token
               userInfoUri: https://graph.facebook.com/v11.0/me?fields=email,first_name,middle_name,last_name,name,picture.width(250).height(250)
-
- 
