@@ -12,8 +12,6 @@ public class RoleService implements IRoleService {
 	@Autowired
 	private IRoleRepository roleRepository;
 	
-	
-	
 	@Override
 	public RoleEntity findByRoleCode(String roleCode) {
 		return roleRepository.findByRoleCode(roleCode);

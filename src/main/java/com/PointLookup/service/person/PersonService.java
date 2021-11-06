@@ -7,11 +7,11 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.PointLookup.model.convert.PersonConvert;
 import com.PointLookup.model.dto.PersonDTO;
 import com.PointLookup.model.entity.PersonEntity;
 import com.PointLookup.repository.IAuthRepository;
 import com.PointLookup.repository.IPersonRepository;
+import com.PointLookup.util.ConverterUtil;
 
 @Service
 public class PersonService implements IPersonService {
@@ -22,8 +22,7 @@ public class PersonService implements IPersonService {
 	@Autowired
 	private IAuthRepository authRepo;
 	
-	@Autowired
-	private PersonConvert personConvert;
+	private ConverterUtil<PersonDTO, PersonEntity> personConvert = new ConverterUtil<PersonDTO, PersonEntity>(PersonDTO.class, PersonEntity.class);
 	
 	@Override
 	public List<PersonEntity> findAll(){
@@ -51,12 +50,9 @@ public class PersonService implements IPersonService {
 			if(personExist == null) {
 				return false;
 			}
-			personExist.setAddress(personDto.getAddress());
-			personExist.setAvatar(personDto.getAvatar());
-			personExist.setCity(personDto.getCity());
-			personExist.setFullName(personDto.getFullName());
-			personExist.setPhone(personDto.getPhone());
-			personExist.setStatus(personDto.getStatus());
+			PersonEntity personUpdate = personConvert.toEntity(personDto);
+			personConvert.merge(personUpdate,personExist);
+			
 			personRepo.save(personExist);
 			return true;
 		}catch (Exception e) {

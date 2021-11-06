@@ -74,8 +74,8 @@ public class PersonController {
 			if(personDto == null) {
 				return new ResponseEntity<String>("Cập nhật không thành công", HttpStatus.BAD_REQUEST);
 			}
-			personService.updatePerson(personDto);
-			return new ResponseEntity<String>("Cập nhật thành công", HttpStatus.OK);
+			boolean isUpdated = personService.updatePerson(personDto);
+			return (isUpdated ? ( new ResponseEntity<String>("Cập nhật thành công", HttpStatus.OK)):( new ResponseEntity<String>("Cập nhật không thành công", HttpStatus.BAD_REQUEST)));
 		}catch(Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<String>("Cập nhật không thành công", HttpStatus.BAD_REQUEST);

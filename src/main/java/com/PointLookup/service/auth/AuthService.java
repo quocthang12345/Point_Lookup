@@ -9,14 +9,12 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.PointLookup.model.convert.PersonConvert;
 import com.PointLookup.model.dto.PersonDTO;
 import com.PointLookup.model.entity.PersonEntity;
 import com.PointLookup.model.entity.RoleEntity;
-import com.PointLookup.model.resource.ERole;
 import com.PointLookup.repository.IAuthRepository;
-import com.PointLookup.repository.IStudentRepository;
 import com.PointLookup.service.role.IRoleService;
+import com.PointLookup.util.ConverterUtil;
 
 import net.bytebuddy.utility.RandomString;
 
@@ -27,13 +25,9 @@ public class AuthService implements IAuthService {
 	private IAuthRepository authRepository;
 	
 	@Autowired
-	private IStudentRepository studentRepository;
-	
-	@Autowired
 	private PasswordEncoder passwordEncoder;
-	
-	@Autowired
-	private PersonConvert personConvert;
+		
+	private ConverterUtil<PersonDTO, PersonEntity> personConvert = new ConverterUtil<PersonDTO, PersonEntity>(PersonDTO.class, PersonEntity.class);
 	
 	@Autowired
 	private IRoleService roleService;
@@ -46,6 +40,12 @@ public class AuthService implements IAuthService {
 	public boolean RegisterUser(PersonDTO personDto, String role) {
 		try {
 			PersonEntity person = personConvert.toEntity(personDto);
+				
+			if(role == "STUDENT") {
+				person.getStudent().setPerson(person);
+			}else if(role == "TEACHER") {
+				person.getTeacher().setPerson(person);
+			}
 			
 			person.setPassWord(passwordEncoder.encode(personDto.getPassWord()));
 			
@@ -61,7 +61,6 @@ public class AuthService implements IAuthService {
 			
 			PersonEntity personInsertSuccess = authRepository.save(person);
 		
-			
 			if(personInsertSuccess == null) {
 				return false;
 			}

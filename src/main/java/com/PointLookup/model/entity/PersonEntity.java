@@ -24,7 +24,6 @@ import lombok.Data;
 @Data
 @Table(name = "person")
 @ApiModel(value = "Person Model")
-/* @DynamicUpdate */
 public class PersonEntity extends BaseEntity {
 	
 	@ApiModelProperty(dataType = "String" , value = "Tên đăng nhập")

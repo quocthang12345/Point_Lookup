@@ -3,6 +3,8 @@ package com.PointLookup.model.dto;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.boot.context.properties.bind.DefaultValue;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
@@ -37,8 +39,8 @@ public class PersonDTO extends BaseDTO {
 
 	private String city;
 	
-	@JsonIgnore
-	private int status;
+	@JsonIgnore  
+	private int status = 1;
 	
 	@JsonIgnore
     private List<RoleDTO> roles = new ArrayList<>();
