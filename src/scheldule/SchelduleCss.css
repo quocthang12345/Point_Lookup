@@ -1,0 +1,23 @@
+table{
+    text-align: center;
+    vertical-align: middle;
+}
+table.detail-score td{
+    width: 10%;
+}
+table th, td{
+    vertical-align: middle;
+}
+.select-container{
+    display: flex;
+    margin: 1%;
+    justify-content: flex-start;
+
+}
+.select-container .class-select, .select-container .subject-select {
+    flex: 1;
+    max-width:18%;
+    font-size: large;
+    margin-left: 1%;
+
+}

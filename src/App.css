@@ -1,5 +1,8 @@
 .App {
   text-align: center;
+  color: #333;
+  font-size: 18px;
+  font-family: "Open Sans", sans-serif;
 }
 
 .App-logo {
