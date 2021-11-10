@@ -1,0 +1,22 @@
+.search-container {
+  display: flex;
+  flex-direction: row;
+  margin: 0 30px;
+  justify-content: flex-start;
+  align-items: flex-end;
+}
+.search-container .form-group {
+  width: 30%;
+  margin-right: 40px;
+}
+.search-container .form-submit {
+  width: 100px;
+  height: 30%;
+}
+.modal-footer{
+    flex-direction: row;
+    justify-content: center !important
+}
+.modal-footer .form-submit{
+    width: 200px;
+}

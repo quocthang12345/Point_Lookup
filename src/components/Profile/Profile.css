@@ -1,0 +1,32 @@
+.profile-header-title {
+    margin: 20px 20px 20px 20px;
+    border-bottom: 1px solid #111;
+}
+.profile-detail-container{
+    display: flex;
+    margin: 20px 20px 20px 50px;
+    flex-wrap: wrap;
+}
+.study-detail-info{
+    margin: 30px 20px 0px 90px;
+    flex-wrap: wrap;
+    display:flex;
+    justify-content: space-evenly;
+}
+.profile-avatar {
+    flex: 1;
+    border: solid 1px #111;
+    height: 250px;
+    width: 230px;
+}
+.profile-detail-info{
+    flex: 6;
+    display: grid;
+    /* flex-direction: row;
+    flex-wrap: wrap; */
+    /* justify-content: space-evenly; */
+    grid-gap: 20px;
+    grid-template-columns: auto auto auto;
+    margin-left: 50px;
+}
+

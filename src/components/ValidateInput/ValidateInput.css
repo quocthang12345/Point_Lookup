@@ -1,0 +1,68 @@
+.form-group {
+  display: flex;
+  margin-bottom: 16px;
+  flex-direction: column;
+  position: relative;
+  width:80%
+}
+
+.form-label,
+.form-message {
+  text-align: left;
+}
+
+.form-label {
+  font-weight: 400;
+  padding-bottom: 5px;
+  line-height: 1.8rem;
+  font-size: larger;
+}
+
+.form-control {
+  height: 45px;
+  padding: 8px 12px;
+  border: 1px solid #b3b3b3;
+  border-radius: 3px;
+  outline: none;
+  font-size: 1.2rem;
+}
+
+.form-control:hover {
+  border-color: #1dbfaf;
+}
+
+.form-group.invalid .form-control {
+  border-color: #f33a58;
+}
+
+.form-group.invalid .form-message {
+  color: #f33a58;
+}
+
+.form-message {
+  font-size: medium;
+  line-height: 1.6rem;
+}
+
+.input-search-dropdown {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  top: 100px;
+  padding: 0px 5px;
+  width:100%;
+  background-color: rgb(219, 217, 217);
+  border-radius: 8px;
+  max-height: 200px;
+  overflow: auto;
+  
+}
+.input-dropdown-item{
+  margin: 5px 0px;
+  font-size:large;
+  padding: 10px ;
+  border-radius: 8px;
+}
+.input-dropdown-item:hover{
+  background-color: rgb(245, 245, 245);
+}

@@ -1,0 +1,16 @@
+.info-item{
+    margin-top: 20px;
+    font-size: large;
+    flex: 1 0 30%;
+}
+.profile-input{
+    width: 80%;
+    height: 35px;
+    text-indent: 10px;
+}
+.study-info-item{
+    width: 80%;
+    flex: 1 0 40%;
+    font-size: large;
+    margin-bottom: 40px;
+}

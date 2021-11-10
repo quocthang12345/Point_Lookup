@@ -1,0 +1,44 @@
+.register-form-heading {
+    font-size: xx-large;
+  }
+.register-form-desc {
+    text-align: center;
+    color: #636d77;
+    font-size: 1.8rem;
+    font-weight: lighter;
+    line-height: 2.4rem;
+    margin-top: 0px;
+    font-weight: xx-large;
+}
+.register-container{
+    flex:1;
+    background: #f1f1f1;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+}
+.form-register {
+    flex: 1;
+    max-width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items:center;
+    min-height: 100px;
+    padding: 20px 0px;
+    background: #fff;
+    border-radius: 2px;
+    align-self: flex-start;
+    box-shadow: 0 2px 5px 0 rgba(51, 62, 73, 0.1);
+    margin-top: 50px;
+  }
+  .form-register .role-select{
+    width: 80%;
+    flex:1;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start
+  }
+  .role-select .form-group:first-child{
+    flex: 20%;
+  }

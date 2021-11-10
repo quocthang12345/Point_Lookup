@@ -1,0 +1,47 @@
+.form-group {
+  display: flex;
+  margin-bottom: 16px;
+  flex-direction: column;
+  width: 80%;
+}
+
+.form-label,
+.form-message {
+  text-align: left;
+}
+
+.form-label {
+  font-weight: 400;
+  padding-bottom: 0px;
+  line-height: 1.8rem;
+  font-size: larger;
+}
+
+select.form-control {
+  height: 46px;
+  padding: 8px 12px;
+  border: 1px solid #b3b3b3;
+  border-radius: 3px;
+  outline: none;
+  font-size: 1.2rem;
+  align-items: center;
+}
+.default-option{
+    display: none;
+}
+.form-control:hover {
+  border-color: #1dbfaf;
+}
+
+.form-group.invalid .form-control {
+  border-color: #f33a58;
+}
+
+.form-group.invalid .form-message {
+  color: #f33a58;
+}
+
+.form-message {
+  font-size: medium;
+  line-height: 1.6rem;
+}
