@@ -99,12 +99,15 @@ public class AuthController {
 	)
     public ResponseEntity<String> registerUser(@ApiParam(value = "PersonInfo",required = true) @RequestBody PersonDTO personDto) {
 		try {
+			
+			if(personDto.getUserName() == null) return new ResponseEntity<String>("username không có", HttpStatus.BAD_REQUEST);
+			
 			PersonEntity checkPersonExists = authService.findOneByUserNameAndStatus(personDto.getUserName(),1);
 			boolean isRegister = false;
 			if(checkPersonExists == null) {
-				if(personDto.getStudent() != null && personDto.getTeacher() == null) {
+				if(personDto.getStudentCode() != null && personDto.getTeacherCode() == null) {
 					isRegister = authService.RegisterUser(personDto, ERole.STUDENT.name());
-				}else if(personDto.getTeacher() != null && personDto.getStudent() == null) {
+				}else if(personDto.getTeacherCode() != null && personDto.getStudentCode()== null) {
 					isRegister = authService.RegisterUser(personDto, ERole.TEACHER.name());
 				}
 				if(isRegister) {				

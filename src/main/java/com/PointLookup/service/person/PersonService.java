@@ -51,6 +51,7 @@ public class PersonService implements IPersonService {
 				return false;
 			}
 			PersonEntity personUpdate = personConvert.toEntity(personDto);
+			
 			personConvert.merge(personUpdate,personExist);
 			
 			personRepo.save(personExist);

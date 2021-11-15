@@ -11,7 +11,6 @@ public class ConverterUtil<T,Y> {
 	
 	private Class<Y> typeClassY;
 	
-	public ConverterUtil() {}
 	
 	public ConverterUtil(Class<T> typeClassT,Class<Y> typeClassY) {
         this.typeClassT = typeClassT;
@@ -31,11 +30,9 @@ public class ConverterUtil<T,Y> {
 		return modelEntity;
 	}
 	
-	
-    public <T> void merge(T source, T target) {
-	    ModelMapper modelMapper = new ModelMapper();
+    public <T> void merge(T entityForUpdate, T entityExistsIsUpdate) {
 	    modelMapper.getConfiguration().setSkipNullEnabled(true);
 	    modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-	    modelMapper.map(source, target);
+	    modelMapper.map(entityForUpdate, entityExistsIsUpdate);
     }
 }

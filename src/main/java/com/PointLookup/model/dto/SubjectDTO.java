@@ -8,18 +8,16 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 @Data
-public class StudentDTO {
+public class SubjectDTO {
+	private String subjectName;
 	
-	private String studentCode;
+	private String subjectCode;
 	
-	private String classCode;
+	private String teacherCode;
 	
 	@JsonIgnore
 	private List<ScoreDTO> scores = new ArrayList<ScoreDTO>();
 	
 	@JsonIgnore
-	private List<SubjectDTO> subjects = new ArrayList<SubjectDTO>() ;
-	
-	@JsonIgnore
-	private PersonDTO person;
+	private List<StudentDTO> students = new ArrayList<StudentDTO>();
 }

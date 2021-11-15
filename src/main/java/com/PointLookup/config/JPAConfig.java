@@ -5,10 +5,10 @@ import java.util.Properties;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -21,6 +21,19 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableJpaRepositories(basePackages = {"com.PointLookup.repository"})
 @EnableTransactionManagement
 public class JPAConfig {
+	
+	@Value("${spring.datasource.username}")
+	private String userName;
+	
+	@Value("${spring.datasource.password}")
+	private String password;
+	
+	@Value("${spring.datasource.driverClassName}")
+	private String driverName;
+	
+	@Value("${spring.datasource.url}")
+	private String urlDatabase;
+	
 	@Bean
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
 		LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
@@ -47,10 +60,10 @@ public class JPAConfig {
 	@Bean
 	public DataSource dataSource() {
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
-		dataSource.setDriverClassName("org.postgresql.Driver");
-		dataSource.setUrl("jdbc:postgresql://localhost:5432/pointlookup");
-		dataSource.setUsername("postgres");
-		dataSource.setPassword("quocthang123");
+		dataSource.setDriverClassName(driverName);
+		dataSource.setUrl(urlDatabase);
+		dataSource.setUsername(userName);
+		dataSource.setPassword(password);
 		return dataSource;
 	}
 	

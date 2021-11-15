@@ -101,8 +101,7 @@ public class PersonEntity extends BaseEntity {
 	
 	
 	@Override
-	public String toString() {
-		
+	public String toString() {		
 		String rs = "\n{\n"+
 				"\tname: \"" + this.userName + "\",\n" + 
 				"\tphone: \"" + this.address + "\",\n" + 

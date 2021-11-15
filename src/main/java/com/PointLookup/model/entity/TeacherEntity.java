@@ -22,14 +22,6 @@ import lombok.Data;
 public class TeacherEntity extends BaseEntity{
 	
 	
-//	@ApiModelProperty(dataType = "List<String>", value = "Danh sách lớp dạy")
-//	@Column(name = "listClassTeach")
-//	private List<String> listClassTeach;
-//	
-//	@ApiModelProperty(dataType = "List<String>", value = "Danh sách khoa công tác")
-//	@Column(name = "listClassTeach")
-//	private List<String> listMajor; 
-	
 	@ApiModelProperty(dataType = "String", value = "Mã giáo viên")
 	@Column(name = "teacherCode")
 	private String teacherCode;
@@ -38,7 +30,7 @@ public class TeacherEntity extends BaseEntity{
 	@OneToOne(mappedBy = "homeRoomTeacher", cascade = CascadeType.ALL, orphanRemoval = true, fetch=FetchType.LAZY)
 	private ClassEntity homeRoomClass;
 	
-	@JoinColumn(name = "teacher_id")
+	@JoinColumn(name = "person_id")
     @OneToOne(fetch = FetchType.LAZY)
 	private PersonEntity person;
 	

@@ -45,7 +45,7 @@ public class PersonDTO extends BaseDTO {
 	@JsonIgnore
     private List<RoleDTO> roles = new ArrayList<>();
     
-    private StudentDTO student;
+    private String studentCode;
     
-    private TeacherDTO teacher;    
+    private String teacherCode;    
 }

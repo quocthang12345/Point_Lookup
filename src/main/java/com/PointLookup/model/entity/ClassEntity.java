@@ -49,4 +49,16 @@ public class ClassEntity extends BaseEntity {
     @JoinColumn(name = "major_id")
 	private MajorEntity major;
 	
+	@Override
+	public String toString() {		
+		String rs = "\n{\n"+
+				"\tname: \"" + this.className + "\",\n" + 
+				"\tphone: \"" + this.classCode + "\",\n" + 
+				"\tTeacher: \"" + this.homeRoomTeacher.getPerson().getFullName() + "\",\n" + 
+				"\tListStudent: \"" + this.getStudent().toString() + "\",\n" +
+				"\tmajor: \""  + this.major.getMajorName() + "\",\n" +"\n"
+				+"\n}\n";
+								
+		return rs;
+	}
 }

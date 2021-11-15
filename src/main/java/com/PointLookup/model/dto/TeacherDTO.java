@@ -1,15 +1,22 @@
 package com.PointLookup.model.dto;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
 
 @Data
 public class TeacherDTO {
-	@JsonIgnore
-	private String teacher_id;
-	
-	private String homeroomClass;
 	
 	private String teacherCode;
+	
+	private ClassDTO homeroomClass;
+	
+	@JsonIgnore
+	private List<SubjectDTO> subjects = new ArrayList<SubjectDTO>();
+	
+	@JsonIgnore
+	private PersonDTO person;
 }

@@ -12,8 +12,15 @@ import org.springframework.stereotype.Service;
 import com.PointLookup.model.dto.PersonDTO;
 import com.PointLookup.model.entity.PersonEntity;
 import com.PointLookup.model.entity.RoleEntity;
+import com.PointLookup.model.entity.StudentEntity;
+import com.PointLookup.model.entity.TeacherEntity;
 import com.PointLookup.repository.IAuthRepository;
+import com.PointLookup.repository.IRoleRepository;
+import com.PointLookup.repository.IStudentRepository;
+import com.PointLookup.repository.ITeacherRepository;
 import com.PointLookup.service.role.IRoleService;
+import com.PointLookup.service.student.IStudentService;
+import com.PointLookup.service.teacher.ITeacherService;
 import com.PointLookup.util.ConverterUtil;
 
 import net.bytebuddy.utility.RandomString;
@@ -27,29 +34,34 @@ public class AuthService implements IAuthService {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 		
-	private ConverterUtil<PersonDTO, PersonEntity> personConvert = new ConverterUtil<PersonDTO, PersonEntity>(PersonDTO.class, PersonEntity.class);
-	
-	@Autowired
-	private IRoleService roleService;
 	
 	@Autowired
     private JavaMailSender mailSender;
+	
+	private ConverterUtil<PersonDTO, PersonEntity> personConvert = new ConverterUtil<PersonDTO, PersonEntity>(PersonDTO.class, PersonEntity.class);
+	
+	private IRoleRepository roleRepo;
+	
+	private IStudentRepository studentRepo;
+	
+	private ITeacherRepository teacherRepo;
+	
+	@Autowired
+	public AuthService(IStudentRepository studentRepo, ITeacherRepository teacherRepo,IRoleRepository roleRepo) {
+		this.studentRepo = studentRepo;
+		this.teacherRepo = teacherRepo;
+		this.roleRepo = roleRepo;
+	}
 	
 	@Override
 	@Transactional
 	public boolean RegisterUser(PersonDTO personDto, String role) {
 		try {
 			PersonEntity person = personConvert.toEntity(personDto);
-				
-			if(role == "STUDENT") {
-				person.getStudent().setPerson(person);
-			}else if(role == "TEACHER") {
-				person.getTeacher().setPerson(person);
-			}
 			
 			person.setPassWord(passwordEncoder.encode(personDto.getPassWord()));
 			
-			RoleEntity personRole = roleService.findByRoleCode(role);
+			RoleEntity personRole = roleRepo.findByRoleCode(role);
 			
 			personRole.getPersons().add(person);
 			
@@ -58,6 +70,30 @@ public class AuthService implements IAuthService {
 			person.setStatus(1);
 			
 			person.setVerifyCode(RandomString.make(64));
+			
+			if(role == "STUDENT") {
+				StudentEntity studentFind = studentRepo.findByStudentCode(personDto.getStudentCode());
+				if(studentFind == null) {
+					StudentEntity newStudent = new StudentEntity();
+					newStudent.setStudentCode(personDto.getStudentCode());
+					newStudent.setPerson(person);
+					StudentEntity studentInserted = studentRepo.save(newStudent);
+					person.setStudent(studentInserted);
+				}else {
+					return false;
+				}
+			}else if(role == "TEACHER") {
+				TeacherEntity teacherFind = teacherRepo.findByTeacherCode(personDto.getTeacherCode());
+				if(teacherFind == null) {					
+					TeacherEntity newTeacher = new TeacherEntity();
+					newTeacher.setTeacherCode(personDto.getTeacherCode());
+					newTeacher.setPerson(person);
+					TeacherEntity teacherInserted = teacherRepo.save(newTeacher);
+					person.setTeacher(teacherInserted);
+				}else {
+					return false;
+				}
+			}
 			
 			PersonEntity personInsertSuccess = authRepository.save(person);
 		
@@ -95,6 +131,7 @@ public class AuthService implements IAuthService {
 		return authRepository.findOneByUserNameAndStatus(username, status);
 	}
 	
+	@Transactional
 	@Override
 	public boolean sendMailToVerify(PersonEntity person){
 		MimeMessage message = mailSender.createMimeMessage();
