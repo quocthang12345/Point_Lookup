@@ -107,8 +107,8 @@ public class PersonEntity extends BaseEntity {
 				"\tphone: \"" + this.address + "\",\n" + 
 				"\taddress: \"" + this.avatar + "\",\n" + 
 				"\tdescription: \"" + this.address + "\",\n" +
-				"\temail: \""  + this.email + "\",\n" +"\n";
-								
+				"\temail: \""  + this.email + "\",\n" +
+				"}\n";				
 		return rs;
 	}
 	

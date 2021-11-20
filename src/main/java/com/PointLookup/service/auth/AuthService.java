@@ -59,18 +59,6 @@ public class AuthService implements IAuthService {
 		try {
 			PersonEntity person = personConvert.toEntity(personDto);
 			
-			person.setPassWord(passwordEncoder.encode(personDto.getPassWord()));
-			
-			RoleEntity personRole = roleRepo.findByRoleCode(role);
-			
-			personRole.getPersons().add(person);
-			
-			person.getRoles().add(personRole);
-			
-			person.setStatus(1);
-			
-			person.setVerifyCode(RandomString.make(64));
-			
 			if(role == "STUDENT") {
 				StudentEntity studentFind = studentRepo.findByStudentCode(personDto.getStudentCode());
 				if(studentFind == null) {
@@ -94,6 +82,18 @@ public class AuthService implements IAuthService {
 					return false;
 				}
 			}
+			
+			person.setPassWord(passwordEncoder.encode(personDto.getPassWord()));
+			
+			RoleEntity personRole = roleRepo.findByRoleCode(role);
+			
+			personRole.getPersons().add(person);
+			
+			person.getRoles().add(personRole);
+			
+			person.setStatus(1);
+			
+			person.setVerifyCode(RandomString.make(64));
 			
 			PersonEntity personInsertSuccess = authRepository.save(person);
 		

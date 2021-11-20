@@ -120,7 +120,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                          "/configuration/security",
                          "/swagger-ui.html",
                          "/webjars/**").permitAll()
-	             .antMatchers("/oauth2/**", "/api/signIn**","/api/findAllSubject","/api/addSubject").permitAll()
+	             .antMatchers("/oauth2/**", "/api/signIn**","/api/findAllSubject","/api/addSubject","/api/addStudentInSubject", "/api/addStudentInClass","/api/findScoreByStudentCode","/api/findAllScoreByStudentCode").permitAll()
 	             .antMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
 	             .antMatchers("/api/login", "/api/register","/api/sendVerifyEmail").permitAll()
 	             .anyRequest().authenticated()

@@ -44,4 +44,18 @@ public class ScoreEntity extends BaseEntity{
 	private SubjectEntity subject;
 	
 	
+	@Override
+	public String toString() {		
+		String rs = "\n{\n"+
+				"\thardWorkScore: \"" + this.hardWorkScore + "\",\n" + 
+				"\tassignmentScore: \"" + this.assignmentScore + "\",\n" + 
+				"\tmidtermScore: \"" + this.midtermScore + "\",\n" + 
+				"\tFinalScore: \"" + this.FinalScore + "\",\n" +
+				"\tstudent: \""  + this.student + "\",\n" +"\n" +
+				"\tsubject: \""  + this.subject + "\",\n" +
+				"}\n";
+								
+		return rs;
+	}
+	
 }

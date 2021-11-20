@@ -7,16 +7,16 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
 
-@Data
-public class ScoreDTO {
+@Data 
+public class ScoreDTO extends BaseDTO {
 	
-	private double hardWorkScore;
+	private Double hardWorkScore;
 
-	private double assignmentScore;
+	private Double assignmentScore;
 
-	private double midtermScore;
+	private Double midtermScore;
 	
-	private double FinalScore;
+	private Double FinalScore;
 	
 	@JsonIgnore
 	private List<StudentDTO> students = new ArrayList<StudentDTO>();

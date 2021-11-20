@@ -31,7 +31,7 @@ public class TeacherEntity extends BaseEntity{
 	private ClassEntity homeRoomClass;
 	
 	@JoinColumn(name = "person_id")
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private PersonEntity person;
 	
 	@ApiModelProperty(dataType = "List<SubjectEntity>", value = "Danh sách môn dạy")

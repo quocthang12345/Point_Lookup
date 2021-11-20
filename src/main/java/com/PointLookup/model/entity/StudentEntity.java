@@ -30,7 +30,7 @@ public class StudentEntity extends BaseEntity{
 	private String studentCode;
 	
 	@JoinColumn(name = "person_id")
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL) // cascadetype.all dùng để lưu các con chưa tồn tại trong database khhi lưu ba mẹ của chúng
 	private PersonEntity person;
 	
 	@ApiModelProperty(dataType = "ClassEntity", value = "Lớp theo học")

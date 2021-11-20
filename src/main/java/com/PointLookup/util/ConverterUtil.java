@@ -26,6 +26,8 @@ public class ConverterUtil<T,Y> {
 	}
 	
 	public Y toEntity(T modelDto) {
+	    modelMapper.getConfiguration().setSkipNullEnabled(true);
+	    modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 		Y modelEntity = modelMapper.map(modelDto,typeClassY);
 		return modelEntity;
 	}

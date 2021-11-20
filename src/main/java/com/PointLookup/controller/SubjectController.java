@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.PointLookup.model.dto.StudentDTO;
@@ -47,6 +48,29 @@ public class SubjectController {
 		}
 	}
 	
+	@ApiOperation(value = "Lấy tất cả môn đang học của sinh viên", notes = "API này cho phép lấy tất cả môn học học sinh tham gia vào trong hệ thống")
+	@GetMapping(
+			produces = {
+					MediaType.APPLICATION_JSON_VALUE
+			},
+			path = {"/api/listSubjectOfStudent"}
+	)
+    public ResponseEntity<String> getListSubjectOfStudent(@ApiParam(value = "StudentCode",required = true)@RequestParam String studentCode) {
+		try {
+			if(studentCode == null) {
+				return new ResponseEntity<String>("Giá trị truyền vào đang rỗng", HttpStatus.BAD_REQUEST);
+			}			
+			List<SubjectEntity> subjects = subjectService.findAllSubjectByStudent(studentCode);
+			
+			if(subjects.size() == 0) return new ResponseEntity<String>("Danh sách rỗng", HttpStatus.BAD_REQUEST);
+			
+			return new ResponseEntity<String>(subjects.toArray().toString(), HttpStatus.OK);
+		}catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<String>("Đã có lỗi trong khi chạy", HttpStatus.BAD_REQUEST);
+		}
+	}
+	
 	@ApiOperation(value = "Thêm môn học", notes = "API này cho phép thêm môn học vào hệ thống")
 	@PostMapping(
 			consumes = {
@@ -78,16 +102,20 @@ public class SubjectController {
 			path = {"/api/addStudentInSubject"}
 	)
     public ResponseEntity<String> addStudentInSubject(@ApiParam(value = "ListStudentInfo",required = true) @RequestBody List<StudentDTO> listStudentDto, 
-    		@ApiParam(value = "SubjectCode",required = true) String subjectCode) {
+    		@ApiParam(value = "SubjectCode",required = true)@RequestParam String subjectCode) {
 		try {
 			if(listStudentDto.size() == 0 && subjectCode == null) {
 				return new ResponseEntity<String>("Giá trị truyền vào đang rỗng", HttpStatus.BAD_REQUEST);
 			}
 			
-			return null;
+			SubjectEntity subject = subjectService.addListStudentInSubject(listStudentDto, subjectCode);
+			
+			if(subject == null) return new ResponseEntity<String>("Thêm thất bại", HttpStatus.BAD_REQUEST);
+			
+			return new ResponseEntity<String>("Thêm thành công", HttpStatus.OK);
 		}catch (Exception e) {
 			e.printStackTrace();
-			return null;
+			return new ResponseEntity<String>("Đã có lỗi trong khi chạy", HttpStatus.BAD_REQUEST);
 		}
 	}
 	

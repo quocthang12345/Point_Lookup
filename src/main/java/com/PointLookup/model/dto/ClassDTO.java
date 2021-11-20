@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 @Data
-public class ClassDTO {
+public class ClassDTO extends BaseDTO {
 	
 	private String className;
 	
