@@ -1,6 +1,10 @@
 package com.PointLookup.controller;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,7 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.PointLookup.model.dto.PersonDTO;
 import com.PointLookup.model.entity.PersonEntity;
+import com.PointLookup.service.auth.tokenProvider.JwtTokenProvider;
 import com.PointLookup.service.person.IPersonService;
+import com.PointLookup.util.ConverterUtil;
+import com.PointLookup.util.ResultMap;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -29,6 +36,11 @@ public class PersonController {
 
 	@Autowired
 	private IPersonService personService;
+	
+	@Autowired
+	private JwtTokenProvider tokenProvider;
+	
+	private ConverterUtil<PersonDTO, PersonEntity> personConverter = new ConverterUtil<PersonDTO, PersonEntity>(PersonDTO.class, PersonEntity.class);
 
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "300", description = "This is Error Page 300"),
@@ -37,28 +49,58 @@ public class PersonController {
 		@ApiResponse(responseCode = "401", description = "Sorry, you can authorize to access this api.")
 			 })
 	
+	@GetMapping("/api/findPerson")
+    public Map<String, Object> findPersonByRequest(HttpServletRequest request) {
+		try {
+			if(request == null) return ResultMap.createResultMap("Error", null, "request null"); 
+			
+			PersonEntity person = personService.findPersonByToken(request);
+			
+			if(person == null) return ResultMap.createResultMap("Error", null, "Người dùng không tồn tại");
+			
+			PersonDTO personDto = personConverter.toDTO(person);
+			
+			return ResultMap.createResultMap("Success", personDto, "Thông tin người dùng");
+		}catch(Exception e) {
+			return null;
+		}
+ 		
+    }
 	
 	@ApiOperation(value = "Tìm tất cả người dùng", notes = "API này sẽ trả về tất cả người dùng trong hệ thống")
-	@GetMapping(value = "/api/findAllPerson")
-	public String getAllPerson() {
-		return personService.findAll().toString();
+	@GetMapping(path = {"/api/findAllPerson"})
+	public Map<String, Object> getAllPerson() {
+		List<PersonEntity> persons = personService.findAll();
+		
+		List<PersonDTO> listPersonDto = new ArrayList<PersonDTO>();
+		
+		if(persons == null) return ResultMap.createResultMap("Error", null, "Danh sách rỗng");
+		
+		persons.forEach(item -> listPersonDto.add(personConverter.toDTO(item)));
+		
+		return ResultMap.createResultMap("Success", listPersonDto, "Danh sách người dùng");
 	}
 	
 	@ApiOperation(value = "Tìm tất cả người dùng qua trạng thái hoạt động", notes = "API này sẽ tìm tất cả người dùng qua status")
-	@GetMapping(value = "/api/getPersonStatus")
-	public ResponseEntity<String> findAllPersonExist(@ApiParam(value = "Nhập trạng thái (0/1)", required = true) @RequestParam(value = "status") int status) {
+	@GetMapping(path = {"/api/getPersonStatus"})
+	public Map<String, Object> findAllPersonExist(@ApiParam(value = "Nhập trạng thái (0/1)", required = true) @RequestParam(value = "status") int status) {
 		try {
 			if(status != 1 || status != 0) {
-				return new ResponseEntity<String>("Xin vui lòng nhập đúng giá trị trạng thái", HttpStatus.BAD_REQUEST);
+				return ResultMap.createResultMap("Error", null, "Xin vui lòng nhập đúng giá trị trạng thái");
 			}
 			List<PersonEntity> listPerson = personService.findByStatus(status);
+			
+			List<PersonDTO> listPersonDto = new ArrayList<PersonDTO>();
 			if(listPerson == null) {
-				return new ResponseEntity<String>("Không tìm thấy người dùng", HttpStatus.BAD_REQUEST);
+				return ResultMap.createResultMap("Error", null, "Không tìm thấy người dùng");
 			}
-			return new ResponseEntity<String>(listPerson.toString(), HttpStatus.OK);
+			
+			listPerson.forEach(item -> listPersonDto.add(personConverter.toDTO(item)));
+			
+			return ResultMap.createResultMap("Success", listPerson, "Danh sách người dùng hoạt động");
 		}catch(Exception e) {
 			e.printStackTrace();
-			return new ResponseEntity<String>("Không tìm thấy người dùng", HttpStatus.BAD_REQUEST);
+			return ResultMap.createResultMap("Error", null, "Không tìm thấy người dùng");
 		}
 	}
 	
@@ -67,7 +109,7 @@ public class PersonController {
 			consumes = {
 					MediaType.APPLICATION_JSON_VALUE
 			},
-			value = "/api/updatePerson"
+			path = {"/api/updatePerson"}
 			)
 	public ResponseEntity<String> updatePerson(@ApiParam(value = "tên tài khoản muốn cập nhật", required = true) @RequestBody PersonDTO personDto) {
 		try {
@@ -84,7 +126,7 @@ public class PersonController {
 	}
 	
 	@ApiOperation(value = "Xoá người dùng bằng username", notes = "API này sẽ xóa người dùng bằng username")
-	@DeleteMapping(value = "/api/deleteUser")
+	@DeleteMapping(path = {"/api/deleteUser"})
 	public ResponseEntity<String> DeleteUser(@ApiParam(value = "tên tài khoản muốn xóa", required = true) @RequestParam(value = "username") String username) {
 		try {
 			if(username == null) {

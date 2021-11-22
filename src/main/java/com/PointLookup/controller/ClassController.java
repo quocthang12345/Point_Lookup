@@ -1,5 +1,7 @@
 package com.PointLookup.controller;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -11,9 +13,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.PointLookup.model.dto.ClassDTO;
-import com.PointLookup.model.dto.StudentDTO;
 import com.PointLookup.model.entity.ClassEntity;
 import com.PointLookup.service.classes.IClassSerivce;
+import com.PointLookup.util.ConverterUtil;
+import com.PointLookup.util.ResultMap;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -26,21 +29,25 @@ public class ClassController {
 	@Autowired
 	private IClassSerivce classService;
 	
+	private ConverterUtil<ClassDTO, ClassEntity> classConverter = new ConverterUtil<ClassDTO, ClassEntity>(ClassDTO.class, ClassEntity.class);
+	
 	@ApiOperation(value = "Tìm kiếm Lớp theo Khoa", notes = "API này sẽ tìm kiếm lớp thông qua tên khoa")
 	@GetMapping(
 			produces = {
 					MediaType.APPLICATION_JSON_VALUE
 			},
-			value = "/api/findClassByMajor"
+			path = {"/api/findClassByMajor"}
 	)
-	public String findClassByMajor(@ApiParam(value = "Mã Khoa", required = true) @RequestParam(required = true) String majorCode) {
+	public Map<String, Object> findClassByMajor(@ApiParam(value = "Mã Khoa", required = true) @RequestParam(required = true) String majorCode) {
 		try {
 			if(majorCode != null) {
 				ClassEntity classes = classService.findByMajor(majorCode);
 				
-				if(classes == null) return null;
+				ClassDTO classDto = classConverter.toDTO(classes);
 				
-				return classes.toString();
+				if(classDto == null) return null;
+				
+				return ResultMap.createResultMap("Success", classDto, "Danh sách Lớp");
 			}
 			return null;
 		}catch(Exception e) {

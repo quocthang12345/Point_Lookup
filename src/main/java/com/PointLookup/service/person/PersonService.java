@@ -2,6 +2,7 @@ package com.PointLookup.service.person;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import com.PointLookup.model.dto.PersonDTO;
 import com.PointLookup.model.entity.PersonEntity;
 import com.PointLookup.repository.IAuthRepository;
 import com.PointLookup.repository.IPersonRepository;
+import com.PointLookup.service.auth.tokenProvider.JwtTokenProvider;
 import com.PointLookup.util.ConverterUtil;
 
 @Service
@@ -18,6 +20,9 @@ public class PersonService implements IPersonService {
 	
 	@Autowired
 	private IPersonRepository personRepo;
+	
+	@Autowired
+	private JwtTokenProvider jwtTokenProvider;
 	
 	@Autowired
 	private IAuthRepository authRepo;
@@ -70,6 +75,27 @@ public class PersonService implements IPersonService {
 				return null;
 			}
 			return listPerson;			
+		}catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	@Override
+	public PersonEntity findPersonByToken(HttpServletRequest request) {
+		try {
+			if(request == null) return null;
+			
+			String token = jwtTokenProvider.getJwtFromRequest(request);
+			
+			if(token == null) return null;
+			
+			String username = jwtTokenProvider.getUsernameFromJWT(token);
+			
+			PersonEntity person = personRepo.findByUserName(username);
+			
+			return person;
+			
 		}catch (Exception e) {
 			e.printStackTrace();
 			return null;

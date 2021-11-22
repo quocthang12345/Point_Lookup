@@ -1,6 +1,8 @@
 package com.PointLookup.controller;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.PointLookup.model.dto.MajorDTO;
 import com.PointLookup.model.entity.MajorEntity;
 import com.PointLookup.service.major.IMajorService;
+import com.PointLookup.util.ConverterUtil;
+import com.PointLookup.util.ResultMap;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -30,6 +34,8 @@ public class MajorController {
 	
 	@Autowired
 	private IMajorService majorService;
+	
+	private ConverterUtil<MajorDTO, MajorEntity> majorConverter = new ConverterUtil<MajorDTO, MajorEntity>(MajorDTO.class, MajorEntity.class);
 
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "300", description = "This is Error Page 300"),
@@ -43,14 +49,19 @@ public class MajorController {
 			produces = {
 					MediaType.APPLICATION_JSON_VALUE
 			},
-			value = "/api/findMajor"
+			path = {"/api/findMajor"}
 	)
-	public String findMajor(@ApiParam(value = "Tên Khoa", required = false) @RequestParam(required = false) String majorName) {
+	public Map<String, Object> findMajor(@ApiParam(value = "Tên Khoa", required = false) @RequestParam(required = false) String majorName) {
 		try {
 			List<MajorEntity> listMajor = majorService.findListMajorByMajorName(majorName);
-			if(listMajor == null) return null;
 			
-			return listMajor.toString();
+			List<MajorDTO> listMajorDto = new ArrayList<MajorDTO>();
+			
+			listMajor.forEach(item -> listMajorDto.add(majorConverter.toDTO(item)));
+			
+			if(listMajorDto.size() <= 0) return null;
+			
+			return ResultMap.createResultMap("Success", listMajorDto, "Danh sách Khoa");
 		}catch(Exception e) {
 			e.printStackTrace();
 			return null;
@@ -111,7 +122,7 @@ public class MajorController {
 			produces = {
 					MediaType.APPLICATION_JSON_VALUE
 			},
-			value = "/api/DeleteMajorByCode"
+			path = {"/api/DeleteMajorByCode"}
 	)
 	public ResponseEntity<String> DeleteMajorByCode(@ApiParam(value = "Mã khoa", required = true) @RequestParam String majorCode) {
 		try {

@@ -1,6 +1,8 @@
 package com.PointLookup.controller;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,9 +16,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.PointLookup.model.dto.ScoreDTO;
-import com.PointLookup.model.entity.MajorEntity;
 import com.PointLookup.model.entity.ScoreEntity;
 import com.PointLookup.service.score.IScoreService;
+import com.PointLookup.util.ConverterUtil;
+import com.PointLookup.util.ResultMap;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -28,27 +31,31 @@ public class ScoreController {
 	@Autowired
 	private IScoreService scoreService;
 	
+	private ConverterUtil<ScoreDTO, ScoreEntity> scoreConverter = new ConverterUtil<ScoreDTO, ScoreEntity>(ScoreDTO.class, ScoreEntity.class);
+	
 	@ApiOperation(value = "Tìm kiếm điểm môn học theo mã sinh viên", notes = "API này sẽ tìm kiểm điểm môn học theo mã sinh viên")
 	@GetMapping(
 			produces = {
 					MediaType.APPLICATION_JSON_VALUE
 			},
-			value = "/api/findScoreByStudentCode"
+			path = {"/api/findScoreByStudentCode"}
 	)
-	public ResponseEntity<String> findScoreSubjectByStudentCode(@ApiParam(value = "Mã sinh viên", required = true) @RequestParam(required = true) String studentCode,
+	public Map<String, Object> findScoreSubjectByStudentCode(@ApiParam(value = "Mã sinh viên", required = true) @RequestParam(required = true) String studentCode,
 			@ApiParam(value = "Mã môn học", required = true) @RequestParam(required = true) String subjectCode) {
 		try {
 			if(studentCode == null && subjectCode == null) {
-				return new ResponseEntity<String>("Giá trị truyền vào đang rỗng", HttpStatus.BAD_REQUEST);
+				return ResultMap.createResultMap("Error", null, "Tham số truyền vào đang null");
 			}
 			ScoreEntity score = scoreService.findBySubjectOfStudent(subjectCode, studentCode);
 			
-			if(score == null) return new ResponseEntity<String>("Tìm kiếm thất bại", HttpStatus.BAD_REQUEST);
+			ScoreDTO scoreDto = scoreConverter.toDTO(score);
 			
-			return new ResponseEntity<String>(score.toString(), HttpStatus.OK);
+			if(scoreDto == null) return ResultMap.createResultMap("Error", null, "Tìm kiếm thất bại");
+			
+			return ResultMap.createResultMap("Success", scoreDto, "Điểm môn học của sinh viên");
 		}catch(Exception e) {
 			e.printStackTrace();
-			return new ResponseEntity<String>("Đã có lỗi trong khi chạy", HttpStatus.BAD_REQUEST);
+			return ResultMap.createResultMap("Error", null, "Đã có lỗi trong lúc chạy");
 		}
 	}
 	
@@ -57,21 +64,24 @@ public class ScoreController {
 			produces = {
 					MediaType.APPLICATION_JSON_VALUE
 			},
-			value = "/api/findAllScoreByStudentCode"
+			path = {"/api/findAllScoreByStudentCode"}
 	)
-	public ResponseEntity<String> findAllScoreSubjectByStudentCode(@ApiParam(value = "Mã sinh viên", required = true) @RequestParam(required = true) String studentCode) {
+	public Map<String, Object> findAllScoreSubjectByStudentCode(@ApiParam(value = "Mã sinh viên", required = true) @RequestParam(required = true) String studentCode) {
 		try {
 			if(studentCode == null) {
-				return new ResponseEntity<String>("Giá trị truyền vào đang rỗng", HttpStatus.BAD_REQUEST);
+				return ResultMap.createResultMap("Error", null, "Tham số truyền vào đang null");
 			}
 			List<ScoreEntity> listScore = scoreService.findByAllSubjectOfStudent(studentCode);
 			
-			if(listScore == null) return new ResponseEntity<String>("Tìm kiếm thất bại", HttpStatus.BAD_REQUEST);
+			List<ScoreDTO> listScoreDto = new ArrayList<ScoreDTO>();
+			listScore.forEach(item -> listScoreDto.add(scoreConverter.toDTO(item)));
 			
-			return new ResponseEntity<String>(listScore.toString(), HttpStatus.OK);
+			if(listScoreDto.size() <= 0) return ResultMap.createResultMap("Error", null, "Tìm kiếm thất bại");
+			
+			return ResultMap.createResultMap("Success", listScoreDto, "Tất cả điểm môn học của sinh viên");
 		}catch(Exception e) {
 			e.printStackTrace();
-			return new ResponseEntity<String>("Đã có lỗi trong khi chạy", HttpStatus.BAD_REQUEST);
+			return ResultMap.createResultMap("Error", null, "Đã có lỗi trong lúc chạy");
 		}
 	}
 	

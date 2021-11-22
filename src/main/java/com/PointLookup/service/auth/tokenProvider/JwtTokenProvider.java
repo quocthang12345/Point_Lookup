@@ -3,8 +3,11 @@ package com.PointLookup.service.auth.tokenProvider;
 import java.nio.file.attribute.UserPrincipal;
 import java.util.Date;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -74,5 +77,14 @@ public class JwtTokenProvider {
 //            log.error("JWT claims string is empty.");
         }
         return false;
+    }
+    
+    public String getJwtFromRequest(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        // Kiểm tra xem header Authorization có chứa thông tin jwt không
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+        return null;
     }
 }
