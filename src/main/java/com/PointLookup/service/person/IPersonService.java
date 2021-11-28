@@ -13,4 +13,5 @@ public interface IPersonService {
 	boolean updatePerson(PersonDTO personDto);
 	List<PersonEntity> findByStatus(int status);
 	PersonEntity findPersonByToken(HttpServletRequest request);
+	PersonEntity findPersonByUsername(String username);
 }

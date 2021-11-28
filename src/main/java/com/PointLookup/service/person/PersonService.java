@@ -101,4 +101,18 @@ public class PersonService implements IPersonService {
 			return null;
 		}
 	}
+
+	@Override
+	public PersonEntity findPersonByUsername(String username) {
+		try {
+			if(username == null) return null;
+			
+			PersonEntity person = personRepo.findByUserName(username);
+			
+			return person;
+		}catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 }

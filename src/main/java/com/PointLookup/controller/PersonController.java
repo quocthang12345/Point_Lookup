@@ -67,6 +67,24 @@ public class PersonController {
  		
     }
 	
+	@GetMapping("/api/findByUserName")
+    public Map<String, Object> findPersonByUserName(@ApiParam(value = "Tên tài khoản", required = true) @RequestParam(value = "username") String username) {
+		try {
+			if(username == null) return ResultMap.createResultMap("Error", null, "Tên tài khoản đang trống"); 
+			
+			PersonEntity person = personService.findPersonByUsername(username);
+			
+			if(person == null) return ResultMap.createResultMap("Error", null, "Người dùng không tồn tại");
+			
+			PersonDTO personDto = personConverter.toDTO(person);
+			
+			return ResultMap.createResultMap("Success", personDto, "Thông tin người dùng");
+		}catch(Exception e) {
+			return null;
+		}
+ 		
+    }
+	
 	@ApiOperation(value = "Tìm tất cả người dùng", notes = "API này sẽ trả về tất cả người dùng trong hệ thống")
 	@GetMapping(path = {"/api/findAllPerson"})
 	public Map<String, Object> getAllPerson() {
