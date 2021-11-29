@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.PointLookup.model.dto.StudentDTO;
 import com.PointLookup.model.dto.SubjectDTO;
+import com.PointLookup.model.entity.StudentEntity;
 import com.PointLookup.model.entity.SubjectEntity;
 
 public interface ISubjectService {
@@ -15,5 +16,7 @@ public interface ISubjectService {
 	SubjectEntity addListStudentInSubject(List<StudentDTO> studentDto, String subjectCode);
 	
 	List<SubjectEntity> findAllSubjectByStudent(String studentCode);
+
+	List<StudentEntity> findAllStudentBySubject(String subjectCode);
 
 }

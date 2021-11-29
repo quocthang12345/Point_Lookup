@@ -17,7 +17,6 @@ public class StudentDTO extends BaseDTO {
 	@JsonIgnore
 	private List<ScoreDTO> scores = new ArrayList<ScoreDTO>();
 	
-	@JsonIgnore
 	private List<SubjectDTO> subjects = new ArrayList<SubjectDTO>() ;
 	
 	@JsonIgnore

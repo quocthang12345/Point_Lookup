@@ -108,4 +108,22 @@ public class SubjectService implements ISubjectService {
 		}
 	}
 
+	@Override
+	public List<StudentEntity> findAllStudentBySubject(String subjectCode) {
+		try {
+			SubjectEntity subject = subjectRepository.findBySubjectCode(subjectCode);
+			
+			if(subject == null) return null;
+			
+			List<StudentEntity> students = subject.getStudent();
+			
+			if(students.size() == 0) return null;
+			
+			return students;
+		}catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 }

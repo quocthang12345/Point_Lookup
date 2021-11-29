@@ -35,6 +35,8 @@ public class SubjectController {
 	
 	private ConverterUtil<SubjectDTO, SubjectEntity> subjectConverter = new ConverterUtil<SubjectDTO, SubjectEntity>(SubjectDTO.class, SubjectEntity.class);
 	
+	private ConverterUtil<StudentDTO, StudentEntity> studentConverter = new ConverterUtil<StudentDTO, StudentEntity>(StudentDTO.class, StudentEntity.class);
+	
 	@ApiOperation(value = "Lấy tất cả danh sách môn học", notes = "API này sẽ tìm kiếm tất cả môn học có trong hệ thống")
 	@GetMapping(
 			produces = {
@@ -56,6 +58,32 @@ public class SubjectController {
 		}catch(Exception e) {
 			e.printStackTrace();
 			return ResultMap.createResultMap("Error", null, "Tìm kiếm thất bại");
+		}
+	}
+	@ApiOperation(value = "Lấy tất cả môn đang học của sinh viên", notes = "API này cho phép lấy tất cả môn học học sinh tham gia vào trong hệ thống")
+	@GetMapping(
+			produces = {
+					MediaType.APPLICATION_JSON_VALUE
+			},
+			path = {"/api/listStudentOfSubject"}
+	)
+    public Map<String, Object> getListStudentOfSubject(@ApiParam(value = "SubjectCode",required = true)@RequestParam String subjectCode) {
+		try {
+			if(subjectCode == null) {
+				return ResultMap.createResultMap("Error", null, "Giá trị truyền vào đang rỗng");
+			}			
+			List<StudentEntity> students = subjectService.findAllStudentBySubject(subjectCode);
+			
+			if(students.size() == 0) return ResultMap.createResultMap("Error", null, "Danh sách rỗng");
+			
+			List<StudentDTO> listStudentDto = new ArrayList<StudentDTO>();
+			
+			students.forEach(item -> listStudentDto.add(studentConverter.toDTO(item)));
+			
+			return ResultMap.createResultMap("Success", listStudentDto, "Danh sách tất cả môn học của sinh viên");
+		}catch (Exception e) {
+			e.printStackTrace();
+			return ResultMap.createResultMap("Error", null, "Đã có lỗi trong khi chạy");
 		}
 	}
 	

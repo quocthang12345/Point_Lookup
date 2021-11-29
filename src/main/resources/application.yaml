@@ -1,11 +1,5 @@
 server:
-    port: 8443
-    ssl:
-      enabled: true
-      key-store-type: PKCS12
-      key-store: /home/quocthang12/Desktop/Point_Lookup/src/main/resources/point-lookup.p12
-      key-store-password: quocthang123
-      key-alias: point-lookup
+    port: 8080
 logging:
     level:
       root: INFO

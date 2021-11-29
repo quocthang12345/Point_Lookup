@@ -81,11 +81,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	    @Bean
 	    CorsConfigurationSource corsConfigurationSource() {
 	        CorsConfiguration configuration = new CorsConfiguration();
-	        configuration.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type","X-Frame-Options"));
-	        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
-	        configuration.setAllowedMethods(Arrays.asList("GET","POST","PUT","DELETE","OPTION"));
+	        configuration.setAllowedHeaders(List.of("*"));
+	        configuration.setAllowedOrigins(Arrays.asList("*"));
+	        configuration.setAllowedMethods(Arrays.asList("*"));
 	        configuration.setExposedHeaders(List.of("Authorization"));
-	        configuration.setAllowCredentials(true);
+//	        configuration.setAllowCredentials(true);
 	        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 	        source.registerCorsConfiguration("/**", configuration);
 	        return source;
@@ -122,7 +122,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                          "/webjars/**").permitAll()
 	             .antMatchers("/oauth2/**", "/api/signIn**").permitAll()
 	             .antMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-	             .antMatchers("/api/login", "/api/register","/api/sendVerifyEmail").permitAll()
+	             .antMatchers("/api/login", "/api/register","/api/sendVerifyEmail","/api/findPerson").permitAll()
 	             .anyRequest().authenticated()
 	             .and()
 	             .oauth2Login()
