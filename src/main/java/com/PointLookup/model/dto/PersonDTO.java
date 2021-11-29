@@ -42,7 +42,6 @@ public class PersonDTO extends BaseDTO {
 	@JsonIgnore  
 	private int status = 1;
 	
-	@JsonIgnore
     private List<RoleDTO> roles = new ArrayList<>();
     
     private String studentCode;

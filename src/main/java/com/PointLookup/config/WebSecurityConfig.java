@@ -122,7 +122,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                          "/webjars/**").permitAll()
 	             .antMatchers("/oauth2/**", "/api/signIn**").permitAll()
 	             .antMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-	             .antMatchers("/api/login", "/api/register","/api/sendVerifyEmail","/api/findPerson").permitAll()
+	             .antMatchers("/api/login", "/api/register","/api/sendVerifyEmail","/api/findPerson","/api/findAllScoreByStudentCode").permitAll()
 	             .anyRequest().authenticated()
 	             .and()
 	             .oauth2Login()

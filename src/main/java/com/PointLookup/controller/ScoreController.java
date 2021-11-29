@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.PointLookup.model.dto.ScoreDTO;
+import com.PointLookup.model.dto.SubjectDTO;
 import com.PointLookup.model.entity.ScoreEntity;
+import com.PointLookup.model.entity.SubjectEntity;
 import com.PointLookup.service.score.IScoreService;
 import com.PointLookup.util.ConverterUtil;
 import com.PointLookup.util.ResultMap;
@@ -32,6 +34,9 @@ public class ScoreController {
 	private IScoreService scoreService;
 	
 	private ConverterUtil<ScoreDTO, ScoreEntity> scoreConverter = new ConverterUtil<ScoreDTO, ScoreEntity>(ScoreDTO.class, ScoreEntity.class);
+	
+	private ConverterUtil<SubjectDTO, SubjectEntity> subjectConverter = new ConverterUtil<SubjectDTO, SubjectEntity>(SubjectDTO.class, SubjectEntity.class);
+	
 	
 	@ApiOperation(value = "Tìm kiếm điểm môn học theo mã sinh viên", notes = "API này sẽ tìm kiểm điểm môn học theo mã sinh viên")
 	@GetMapping(
@@ -74,7 +79,12 @@ public class ScoreController {
 			List<ScoreEntity> listScore = scoreService.findByAllSubjectOfStudent(studentCode);
 			
 			List<ScoreDTO> listScoreDto = new ArrayList<ScoreDTO>();
-			listScore.forEach(item -> listScoreDto.add(scoreConverter.toDTO(item)));
+			listScore.forEach(item -> {
+				ScoreDTO scoreDto = scoreConverter.toDTO(item);
+				SubjectDTO subjectDto = subjectConverter.toDTO(item.getSubject());
+				scoreDto.setSubjects(subjectDto);
+				listScoreDto.add(scoreDto);
+			});
 			
 			if(listScoreDto.size() <= 0) return ResultMap.createResultMap("Error", null, "Tìm kiếm thất bại");
 			

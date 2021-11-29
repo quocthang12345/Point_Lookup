@@ -60,7 +60,7 @@ public class SubjectController {
 			return ResultMap.createResultMap("Error", null, "Tìm kiếm thất bại");
 		}
 	}
-	@ApiOperation(value = "Lấy tất cả môn đang học của sinh viên", notes = "API này cho phép lấy tất cả môn học học sinh tham gia vào trong hệ thống")
+	@ApiOperation(value = "Lấy tất cả sinh viên đang theo học môn", notes = "API này cho phép lấy tất cả học sinh tham gia vào môn trong hệ thống")
 	@GetMapping(
 			produces = {
 					MediaType.APPLICATION_JSON_VALUE
@@ -80,7 +80,7 @@ public class SubjectController {
 			
 			students.forEach(item -> listStudentDto.add(studentConverter.toDTO(item)));
 			
-			return ResultMap.createResultMap("Success", listStudentDto, "Danh sách tất cả môn học của sinh viên");
+			return ResultMap.createResultMap("Success", listStudentDto, "Danh sách tất cả sinh viên");
 		}catch (Exception e) {
 			e.printStackTrace();
 			return ResultMap.createResultMap("Error", null, "Đã có lỗi trong khi chạy");
