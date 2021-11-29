@@ -44,7 +44,7 @@ public class SubjectEntity extends BaseEntity{
 	private List<ScoreEntity> scores = new ArrayList<ScoreEntity>();
 	
 	@ApiModelProperty(hidden = true)
-	@ManyToMany(fetch = FetchType.LAZY,
+	@ManyToMany(fetch = FetchType.EAGER,
 			cascade = {
 	                CascadeType.PERSIST,
 	                CascadeType.MERGE
