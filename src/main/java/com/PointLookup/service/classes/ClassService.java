@@ -40,15 +40,15 @@ public class ClassService implements IClassSerivce {
 	private ConverterUtil<ClassDTO, ClassEntity> classConverter = new ConverterUtil<ClassDTO, ClassEntity>(ClassDTO.class, ClassEntity.class);
 	
 	@Override
-	public ClassEntity findByMajor(String majorCode) {
+	public List<ClassEntity> findByMajor(String majorCode) {
 		try {
 			MajorEntity major = majorRepository.findByMajorCode(majorCode);
 			
 			if(major == null) return null;
 			
-			ClassEntity classes = classRepository.findByMajor_Id(major.getId());
+			List<ClassEntity> classes = classRepository.findByMajor_Id(major.getId());
 			
-			if(classes == null) return null;
+			if(classes.size() <= 0) return null;
 					
 			return classes;
 		}catch(Exception e) {

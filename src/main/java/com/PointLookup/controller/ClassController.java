@@ -1,5 +1,7 @@
 package com.PointLookup.controller;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,18 +43,20 @@ public class ClassController {
 	public Map<String, Object> findClassByMajor(@ApiParam(value = "Mã Khoa", required = true) @RequestParam(required = true) String majorCode) {
 		try {
 			if(majorCode != null) {
-				ClassEntity classes = classService.findByMajor(majorCode);
+				List<ClassEntity> classes = classService.findByMajor(majorCode);
 				
-				ClassDTO classDto = classConverter.toDTO(classes);
+				List<ClassDTO> listClassDto = new ArrayList<ClassDTO>();
 				
-				if(classDto == null) return null;
+				classes.forEach(item -> listClassDto.add(classConverter.toDTO(item)));
+			
+				if(listClassDto.size() <= 0) return ResultMap.createResultMap("Error", null, "Danh sách rỗng");
 				
-				return ResultMap.createResultMap("Success", classDto, "Danh sách Lớp");
+				return ResultMap.createResultMap("Success", listClassDto, "Danh sách Lớp");
 			}
-			return null;
+			return ResultMap.createResultMap("Error", null, "Mã khoa đang rỗng");
 		}catch(Exception e) {
 			e.printStackTrace();
-			return null;
+			return ResultMap.createResultMap("Error", null, "Đã có lỗi trong khi chạy");
 		}
 	}
 	

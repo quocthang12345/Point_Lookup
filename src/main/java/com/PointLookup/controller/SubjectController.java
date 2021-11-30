@@ -3,6 +3,9 @@ package com.PointLookup.controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.PointLookup.model.dto.StudentDTO;
 import com.PointLookup.model.dto.SubjectDTO;
+import com.PointLookup.model.entity.ScoreEntity;
 import com.PointLookup.model.entity.StudentEntity;
 import com.PointLookup.model.entity.SubjectEntity;
 import com.PointLookup.service.subject.ISubjectService;
@@ -78,7 +82,12 @@ public class SubjectController {
 			
 			List<StudentDTO> listStudentDto = new ArrayList<StudentDTO>();
 			
-			students.forEach(item -> listStudentDto.add(studentConverter.toDTO(item)));
+			students.forEach(item -> {
+				List<ScoreEntity> scores = item.getScores();
+				List<ScoreEntity> scoreFind = scores.stream().filter(score -> score.getSubject().getSubjectCode().equals(subjectCode)).collect(Collectors.toList());
+				item.setScores(scoreFind);
+				listStudentDto.add(studentConverter.toDTO(item));
+			});
 			
 			return ResultMap.createResultMap("Success", listStudentDto, "Danh sách tất cả sinh viên");
 		}catch (Exception e) {
