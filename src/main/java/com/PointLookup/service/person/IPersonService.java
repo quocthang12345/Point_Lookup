@@ -14,4 +14,5 @@ public interface IPersonService {
 	List<PersonEntity> findByStatus(int status);
 	PersonEntity findPersonByToken(HttpServletRequest request);
 	PersonEntity findPersonByUsername(String username);
+	List<PersonEntity> findListPersonByRole(String roleCode);
 }

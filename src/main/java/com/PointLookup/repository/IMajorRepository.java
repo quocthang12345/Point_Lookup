@@ -11,7 +11,7 @@ import com.PointLookup.model.entity.MajorEntity;
 public interface IMajorRepository extends JpaRepository<MajorEntity, Long> {
 	MajorEntity findByMajorName(String majorName);
 	
-	boolean deleteByMajorCode(String majorCode);
+	void deleteByMajorCode(String majorCode);
 	
 	MajorEntity findByMajorCode(String majorCode);
 }

@@ -153,14 +153,14 @@ public class SubjectController {
 			},
 			path = {"/api/addStudentInSubject"}
 	)
-    public ResponseEntity<String> addStudentInSubject(@ApiParam(value = "ListStudentInfo",required = true) @RequestBody List<StudentDTO> listStudentDto, 
+    public ResponseEntity<String> addStudentInSubject(@ApiParam(value = "ListStudentInfo",required = true) @RequestBody StudentDTO StudentDto, 
     		@ApiParam(value = "SubjectCode",required = true)@RequestParam String subjectCode) {
 		try {
-			if(listStudentDto.size() == 0 && subjectCode == null) {
+			if(StudentDto == null && subjectCode == null) {
 				return new ResponseEntity<String>("Giá trị truyền vào đang rỗng", HttpStatus.BAD_REQUEST);
 			}
 			
-			SubjectEntity subject = subjectService.addListStudentInSubject(listStudentDto, subjectCode);
+			SubjectEntity subject = subjectService.addListStudentInSubject(StudentDto, subjectCode);
 			
 			if(subject == null) return new ResponseEntity<String>("Thêm thất bại", HttpStatus.BAD_REQUEST);
 			

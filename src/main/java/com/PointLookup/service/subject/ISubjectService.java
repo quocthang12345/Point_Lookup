@@ -13,7 +13,7 @@ public interface ISubjectService {
 
 	SubjectEntity addSubject(SubjectDTO subjectDto);
 	
-	SubjectEntity addListStudentInSubject(List<StudentDTO> studentDto, String subjectCode);
+	SubjectEntity addListStudentInSubject(StudentDTO studentDto, String subjectCode);
 	
 	List<SubjectEntity> findAllSubjectByStudent(String studentCode);
 

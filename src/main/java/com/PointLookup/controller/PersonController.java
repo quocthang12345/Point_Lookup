@@ -49,6 +49,29 @@ public class PersonController {
 		@ApiResponse(responseCode = "401", description = "Sorry, you can authorize to access this api.")
 			 })
 	
+	@GetMapping("/api/listPerson")
+    public Map<String, Object> findPersonByRole(@ApiParam(value = "Mã vai trò", required = true) @RequestParam(value = "roleCode") String roleCode) {
+		try {
+			if(roleCode == null) return ResultMap.createResultMap("Error", null, "Mã vai trò đang null"); 
+			
+			List<PersonEntity> listPerson = personService.findListPersonByRole(roleCode);
+			
+			if(listPerson.size() <= 0 || listPerson == null) return ResultMap.createResultMap("Error", null, "Danh sách rỗng");
+			
+			List<PersonDTO> listPersonDto = new ArrayList<PersonDTO>();
+			
+			listPerson.forEach(person -> {
+				listPersonDto.add(personConverter.toDTO(person));
+			});
+				
+			return ResultMap.createResultMap("Success", listPersonDto, "Danh sách người dùng theo vai trò");
+		}catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+ 		
+    }
+	
 	@GetMapping("/api/findPerson")
     public Map<String, Object> findPersonByRequest(HttpServletRequest request) {
 		try {
@@ -62,6 +85,7 @@ public class PersonController {
 			
 			return ResultMap.createResultMap("Success", personDto, "Thông tin người dùng");
 		}catch(Exception e) {
+			e.printStackTrace();
 			return null;
 		}
  		
@@ -80,6 +104,7 @@ public class PersonController {
 			
 			return ResultMap.createResultMap("Success", personDto, "Thông tin người dùng");
 		}catch(Exception e) {
+			e.printStackTrace();
 			return null;
 		}
  		

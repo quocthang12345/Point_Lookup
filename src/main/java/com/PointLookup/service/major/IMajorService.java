@@ -6,7 +6,9 @@ import com.PointLookup.model.dto.MajorDTO;
 import com.PointLookup.model.entity.MajorEntity;
 
 public interface IMajorService {
-	MajorEntity addOrUpdateMajor(MajorDTO major);
+	MajorEntity addMajor(MajorDTO major);
+	
+	MajorEntity updateMajor(MajorDTO major);
 	
 	List<MajorEntity> findListMajorByMajorName(String majorName);
 	

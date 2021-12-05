@@ -79,7 +79,7 @@ public class MajorController {
 		try {
 			MajorEntity checkMajorExists = majorService.findByMajorCode(majorDto.getMajorCode());
 			if(checkMajorExists == null) {
-				MajorEntity majorAddSuccess = majorService.addOrUpdateMajor(majorDto);
+				MajorEntity majorAddSuccess = majorService.addMajor(majorDto);
 				if(majorAddSuccess == null) {	
 					return new ResponseEntity<String>("Thêm thất bại", HttpStatus.BAD_REQUEST);
 				}			
@@ -95,17 +95,14 @@ public class MajorController {
 	
 	@ApiOperation(value = "Cập nhật Khoa", notes = "API này cho phép cập nhật khoa vào hệ thống")
 	@PutMapping(
-			consumes = {
-					MediaType.APPLICATION_JSON_VALUE
-			},
 			path = {"/api/updateMajor"}
 	)
-    public ResponseEntity<String> updateMajor(@ApiParam(value = "MajorUpdate",required = true) @RequestBody MajorDTO majorDto, @ApiParam(value = "MajorCode",required = true) @RequestParam String majorCode) {
+    public ResponseEntity<String> updateMajor(@ApiParam(value = "Chỉ được cập nhật tên khoa, truyền value cho majorCode đúng",required = true) @RequestBody MajorDTO majorDto) {
 		try {
-			if(majorCode != null) {
-				MajorEntity majorAddSuccess = majorService.addOrUpdateMajor(majorDto);
+			if(majorDto != null) {
+				MajorEntity majorAddSuccess = majorService.updateMajor(majorDto);
 				if(majorAddSuccess == null) {	
-					return new ResponseEntity<String>("Cập nhật thành công", HttpStatus.BAD_REQUEST);
+					return new ResponseEntity<String>("Cập nhật thất bại", HttpStatus.BAD_REQUEST);
 				}			
 				return new ResponseEntity<String>("Cập nhật thành công", HttpStatus.OK);
 			}

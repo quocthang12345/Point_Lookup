@@ -10,8 +10,10 @@ import org.springframework.stereotype.Service;
 
 import com.PointLookup.model.dto.PersonDTO;
 import com.PointLookup.model.entity.PersonEntity;
+import com.PointLookup.model.entity.RoleEntity;
 import com.PointLookup.repository.IAuthRepository;
 import com.PointLookup.repository.IPersonRepository;
+import com.PointLookup.repository.IRoleRepository;
 import com.PointLookup.service.auth.tokenProvider.JwtTokenProvider;
 import com.PointLookup.util.ConverterUtil;
 
@@ -20,6 +22,9 @@ public class PersonService implements IPersonService {
 	
 	@Autowired
 	private IPersonRepository personRepo;
+	
+	@Autowired
+	private IRoleRepository roleRepository;
 	
 	@Autowired
 	private JwtTokenProvider jwtTokenProvider;
@@ -114,5 +119,18 @@ public class PersonService implements IPersonService {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	@Override
+	public List<PersonEntity> findListPersonByRole(String roleCode) {
+		if(roleCode == null) return null;
+		
+		RoleEntity role = roleRepository.findByRoleCode(roleCode);
+		
+		if(role == null) return null;
+		
+		List<PersonEntity> result = role.getPersons();
+		
+		return result;
 	}
 }

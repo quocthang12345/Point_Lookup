@@ -2,15 +2,18 @@ package com.PointLookup.service.subject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.PointLookup.model.dto.StudentDTO;
 import com.PointLookup.model.dto.SubjectDTO;
+import com.PointLookup.model.entity.ClassEntity;
 import com.PointLookup.model.entity.StudentEntity;
 import com.PointLookup.model.entity.SubjectEntity;
 import com.PointLookup.model.entity.TeacherEntity;
+import com.PointLookup.repository.IClassRepository;
 import com.PointLookup.repository.IStudentRepository;
 import com.PointLookup.repository.ISubjectRepository;
 import com.PointLookup.repository.ITeacherRepository;
@@ -28,6 +31,9 @@ public class SubjectService implements ISubjectService {
 	@Autowired
 	private IStudentRepository studentRepository;
 	
+	@Autowired
+	private IClassRepository classRepository;
+	
 	private ConverterUtil<SubjectDTO, SubjectEntity> subjectConvert = new ConverterUtil<SubjectDTO, SubjectEntity>(SubjectDTO.class, SubjectEntity.class);
 	
 	@Override
@@ -43,6 +49,10 @@ public class SubjectService implements ISubjectService {
 			if(teacher == null) {
 				return null;
 			}
+			
+			SubjectEntity subjectExist = subjectRepository.findBySubjectCode(subjectDto.getSubjectCode());
+			
+			if(subjectExist != null) return null;
 			
 			SubjectEntity subject = subjectConvert.toEntity(subjectDto);
 			
@@ -60,24 +70,27 @@ public class SubjectService implements ISubjectService {
 	}
 
 	@Override
-	public SubjectEntity addListStudentInSubject(List<StudentDTO> studentDto, String subjectCode) {
+	public SubjectEntity addListStudentInSubject(StudentDTO studentDto, String subjectCode) {
 		try {
-			List<StudentEntity> result = new ArrayList<StudentEntity>();
 			SubjectEntity subjectFind = subjectRepository.findBySubjectCode(subjectCode);
 			
 			if(subjectFind == null) return null;
 			
-			studentDto.forEach(student -> {
-				StudentEntity entity = studentRepository.findByStudentCode(student.getStudentCode());
-				if(entity != null) {
-					entity.getSubjects().add(subjectFind);
-					result.add(entity);
-				}
-			});
+			ClassEntity classes = classRepository.findByClassCode(studentDto.getClassCode());
 			
-			if(result.size() <= 0) return null;
+			if(classes == null) return null;
 			
-			subjectFind.getStudent().addAll(result);
+			Optional<StudentEntity> studentEntity = classes.getStudent().stream().filter(student -> student.getStudentCode().equals(studentDto.getStudentCode())).findAny();
+			
+			if(!studentEntity.isPresent()) return null;
+			
+			Optional<StudentEntity> studentInSubject = subjectFind.getStudent().stream().filter(student -> student.getStudentCode().equals(studentDto.getStudentCode())).findAny();
+			
+			if(studentInSubject.isPresent()) return null;
+			
+			studentEntity.get().getSubjects().add(subjectFind);
+					
+			subjectFind.getStudent().add(studentEntity.get());
 			
 			SubjectEntity subjectInserted = subjectRepository.save(subjectFind);
 			

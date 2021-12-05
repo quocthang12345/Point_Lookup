@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,26 +22,40 @@ public class MajorService implements IMajorService {
 	@Autowired
 	private IMajorRepository majorRepository;
 	
+	@Transactional
 	@Override
-	public MajorEntity addOrUpdateMajor(MajorDTO majorDTO) {
+	public MajorEntity addMajor(MajorDTO majorDTO) {
 		try {
 			MajorEntity major = majorConverter.toEntity(majorDTO);
 			
 			if(major == null) return null;
 			
-			if(major.getId() != null) {
-				Optional<MajorEntity> majorExists = majorRepository.findById(major.getId());
-				if(majorExists.isPresent()) {
-					majorConverter.merge(major, majorExists);
-				}
-			}
 			MajorEntity majorSuccess = majorRepository.save(major);
+			
 			return majorSuccess;
 		}catch(Exception e) {
 			e.printStackTrace();
 			return null;
 		}
-
+	}
+	
+	@Transactional
+	@Override
+	public MajorEntity updateMajor(MajorDTO majorDto) {
+		try {
+			MajorEntity majorExist = majorRepository.findByMajorCode(majorDto.getMajorCode());
+			
+			if(majorExist == null) return null;
+			
+			majorExist.setMajorName(majorDto.getMajorName());
+			
+			MajorEntity major = majorRepository.save(majorExist);
+			
+			return major;
+		}catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	@Override
@@ -59,12 +75,15 @@ public class MajorService implements IMajorService {
 		}
 	}
 
+	@Transactional
 	@Override
 	public boolean deleteByMajorCode(String majorCode) {
 		try {
 			if(majorCode == null) return false;
-			boolean isDeleted = majorRepository.deleteByMajorCode(majorCode);
-			return isDeleted;
+			
+			majorRepository.deleteByMajorCode(majorCode);
+			
+			return true;
 		}catch(Exception e) {
 			e.printStackTrace();
 			return false;
@@ -82,5 +101,6 @@ public class MajorService implements IMajorService {
 			return null;
 		}
 	}
+
 	
 }
