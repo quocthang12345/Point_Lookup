@@ -4,14 +4,18 @@ import ValidateInput from "../../../components/ValidateInput/ValidateInput";
 import Button from "../../../components/Button/Button";
 import Header from "../../../components/Header/Header";
 import Modal from "react-bootstrap/Modal";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { Link, useLocation, useHistory } from "react-router-dom";
 const ManageMajor = () => {
-  const [modalDel, setModalDel] = useState(false);
+  // const [modalDel, setModalDel] = useState(false);
   const [modalAdd, setModalAdd] = useState(false);
+  const [modalUpdate, setModalUpdate] = useState(false);
   const [majors, setMajors] = useState([]);
-  const [delMajor, setDelMajor] = useState({});
+  const allMajors = useRef([]);
+  // const [delMajor, setDelMajor] = useState({});
+  const [updMajor, setUpdMajor] = useState({});
+  const [errorUpdate, setErrorUpdate] = useState("");
   const history = useHistory();
   const handleViewClasses = (classInfo) => {
     history.push("/manageclass", { params: classInfo });
@@ -20,23 +24,22 @@ const ManageMajor = () => {
   useEffect(() => {
     axios.get("http://127.0.0.1:8080/api/findMajor").then((response) => {
       // console.log(response.data.data);
-      setMajors(response.data.data)
+      setMajors(response.data.data);
+      allMajors.current = response.data.data;
     });
-  }, []);
-  const handleDelMajor = (majorCode) => {
-    console.log(majorCode);
-    axios
-      .delete("http://localhost:8080/api/DeleteMajorByCode", {
-        majorCode: majorCode,
-      })
-      .then((response) => {
-        console.log(response.data);
-      })
-      .catch((err) => {
-        console.log("Lỗi", err);
-      });
-    setModalDel(false);
-  };
+  }, [modalAdd, modalUpdate]);
+  // const handleDelMajor = (majorCode) => {
+  //   // console.log(majorCode);
+  //   axios
+  //     .delete("http://localhost:8080/api/DeleteMajorByCode/" + majorCode)
+  //     .then((response) => {
+  //       console.log(response.data);
+  //     })
+  //     .catch((err) => {
+  //       console.log("Lỗi", err);
+  //     });
+  //   setModalDel(false);
+  // };
 
   const handleAddlMajor = () => {
     const addMajorData = document.querySelectorAll(".add-major-data");
@@ -54,9 +57,51 @@ const ManageMajor = () => {
     setModalAdd(false);
   };
 
+  const handleUpdataMajor = (updateMajor) => {
+    // console.log(updateMajor);
+    const majorName = document.querySelector(".update-major-data").innerText;
+    // console.log(majorName);
+    if (!majorName.trim()){
+      setErrorUpdate("Không để trống tên khoa")
+      // setModalUpdate(false)
+    }
+    else if (majorName === updateMajor.majorName){
+      setModalUpdate(false)
+      // console.log("trùng")
+    }
+    else{
+      const data = {majorName: majorName}
+      axios
+        .put("/api/updateMajor?majorCode=" + updateMajor.majorCode, data)
+        .then((response) => {
+          console.log(response.data);
+          setModalUpdate(false)
+          setErrorUpdate("")
+        })
+        .catch((err) => {
+          console.log("Lỗi: ",err);
+          setErrorUpdate("cập nhật thất bại")
+        });
+      }
+  };
+
+  const handleSearchMajor = () => {
+    const searchInput = document.querySelector(".form-control").value;
+    if (searchInput) {
+      setMajors((pre) =>
+        pre.filter((item) => item.majorName.includes(searchInput))
+      );
+    } else {
+      setMajors(allMajors.current);
+    }
+  };
+
   return (
     <>
-      <Header name="admin Thịnh" isLoggedIn={true}>
+      <Header
+        isLoggedIn={true}
+        name={JSON.parse(localStorage.getItem("user")).fullName}
+      >
         <div className="nav-item-header">
           <b>Cá nhân</b>
           <div className="dropdown-content">
@@ -75,7 +120,7 @@ const ManageMajor = () => {
           <b>Quản lí học tập</b>
           <div className="dropdown-content">
             <Link>Quản lí lớp, khoa</Link>
-            <Link>Quản lí điểm</Link>
+            <Link to="/subjectadmin">Quản lí môn học</Link>
           </div>
         </div>
       </Header>
@@ -85,14 +130,14 @@ const ManageMajor = () => {
         </h2>
         <div className="search-container" style={{ marginLeft: "40px" }}>
           <ValidateInput
-            name="teacher-name"
+            name="major"
             lable="Tên khoa"
             dropdownList={majors.reduce(
               (value, item) => value.concat(item.majorName),
               []
             )}
           />
-          <Button title="Dữ liệu" />
+          <Button title="Dữ liệu" onClick={handleSearchMajor} />
         </div>
         <div className="manage-account">
           <h5>Quản lý khoa</h5>
@@ -121,12 +166,18 @@ const ManageMajor = () => {
                   <td className="edit-major">
                     <Button
                       title="Xóa"
+                      // onClick={() => {
+                      //   setModalDel(true);
+                      //   setDelMajor(item);
+                      // }}
+                    />
+                    <Button
+                      title="Sửa"
                       onClick={() => {
-                        setModalDel(true);
-                        setDelMajor(item);
+                        setModalUpdate(true);
+                        setUpdMajor(item);
                       }}
                     />
-                    <Button title="Sửa" />
                   </td>
                 </tr>
               ))}
@@ -143,7 +194,7 @@ const ManageMajor = () => {
         </div>
       </div>
       {/* Delete Modal */}
-      <Modal
+      {/* <Modal
         size="md"
         show={modalDel}
         onHide={() => setModalDel(false)}
@@ -163,7 +214,7 @@ const ManageMajor = () => {
             title="Xác nhận"
           />
         </Modal.Footer>
-      </Modal>
+      </Modal> */}
       {/* Add Modal */}
       <Modal
         size="md"
@@ -195,11 +246,18 @@ const ManageMajor = () => {
         </Modal.Footer>
       </Modal>
       {/* Update Modal */}
-      {/* <Modal size="md" show={modalUpdate} onHide ={() => setModalUpdate(false)} aria-labelledby="example-modal-sizes-title-lg">
-          <Modal.Header closeButton>
-              <Modal.Title id="example-modal-sizes-title-lg">Thêm khoa</Modal.Title>
-          </Modal.Header>
-          <Modal.Body style = {{textAlign: 'center', fontSize: "large"}}>
+      <Modal
+        size="md"
+        show={modalUpdate}
+        onHide={() => {setModalUpdate(false); setErrorUpdate("")}}
+        aria-labelledby="example-modal-sizes-title-lg"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="example-modal-sizes-title-lg">
+            Cập nhật khoa
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body style={{ textAlign: "center", fontSize: "large" }}>
           <Table responsive bordered hover>
             <thead>
               <tr>
@@ -209,16 +267,22 @@ const ManageMajor = () => {
             </thead>
             <tbody>
               <tr>
-                <th contentEditable = {true} className = "add-major-data"></th>
-                <th  contentEditable = {true} className = "add-major-data"></th>
+                <th>{updMajor.majorCode}</th>
+                <th contentEditable={true} className="update-major-data">
+                  {updMajor.majorName}
+                </th>
               </tr>
             </tbody>
           </Table>
-          </Modal.Body>
-          <Modal.Footer>
-              <Button onClick={() => handleAddlMajor()} title = "Xác nhận"/>
-          </Modal.Footer>
-      </Modal> */}
+          <p style ={{color: 'red'}}>{errorUpdate}</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            title="Xác nhận"
+            onClick={() => handleUpdataMajor(updMajor)}
+          />
+        </Modal.Footer>
+      </Modal>
     </>
   );
 };

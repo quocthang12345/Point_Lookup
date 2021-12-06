@@ -16,10 +16,10 @@ const Login = () => {
   const handleSubmitLogin = (e) => {
     e.preventDefault();
     const loginInputs = document.querySelectorAll(".form-control");
-    console.log({
-      username: loginInputs[0].value,
-      password: loginInputs[1].value,
-    })
+    // console.log({
+    //   username: loginInputs[0].value,
+    //   password: loginInputs[1].value,
+    // })
     axios
       .post("http://localhost:8080/api/login", {
         username: loginInputs[0].value,
@@ -31,6 +31,7 @@ const Login = () => {
       })
       .catch((error) => {
         console.log(error);
+        alert("Đăng nhập thất bại")
       });
   };
 

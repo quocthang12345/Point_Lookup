@@ -5,6 +5,10 @@ import logout from "../../shared/assets/img/logout.png";
 import { BrowserRouter as Router, Link, useHistory } from "react-router-dom";
 const Header = (props) => {
 	let history = useHistory();
+	const handleLogOut = () => {
+		localStorage.clear()
+		history.push('/login')
+	}
   return (
     <header className="header-section">
       <div className="logo-container">
@@ -43,11 +47,11 @@ const Header = (props) => {
         </div>
         <div className="nav-info">{props.isLoggedIn ? props.name: ""}</div>
         <div className="nav-login">
-				 <Link to="/login" ><div className="login-btn" >
+				 <div className="login-btn" onClick = {handleLogOut} >
 					<b>{props.isLoggedIn ? "Đăng xuất" : "Đăng nhập"}</b>
 					{props.isLoggedIn && <img className="logout-icon" src={logout} alt={logout} />}
 				</div>
-				</Link>
+				
         </div>
       </div>
     </header>

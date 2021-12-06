@@ -2,10 +2,15 @@ import { Link } from "react-router-dom";
 import ProfileInput  from "../../../components/ProfileInput/ProfileInput";
 import Header from "../../../components/Header/Header"
 import Profile from "../../../components/Profile/Profile";
+import {useState} from "react"
 const StudentProfile = () => {
+    const [user, setUser] = useState({})
+    const handleGetUser = (user) =>{
+      setUser(user)
+    }
     return (
         <>
-        <Header>
+        <Header isLoggedIn = {true} name ={user.fullName}>
         <div className = "nav-item-header"><b>Cá nhân</b>
                 <div className = "dropdown-content">
                     <Link >Thông tin cá nhân</Link>
@@ -30,7 +35,7 @@ const StudentProfile = () => {
                 </div>
             </div>
         </Header>
-        <Profile> 
+        <Profile getUser = {handleGetUser}> 
             <ProfileInput title = "- Khoa -" inputClass = "study-info-item"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <ProfileInput title = "-  Lớp  - " inputClass = "study-info-item"/>
         </Profile>
