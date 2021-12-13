@@ -39,7 +39,6 @@ public class PersonDTO extends BaseDTO {
 
 	private String city;
 	
-	@JsonIgnore  
 	private int status = 1;
 	
     private List<RoleDTO> roles = new ArrayList<>();

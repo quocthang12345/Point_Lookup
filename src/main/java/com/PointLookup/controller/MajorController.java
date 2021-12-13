@@ -68,6 +68,28 @@ public class MajorController {
 		}
 	}
 	
+	@ApiOperation(value = "Tìm kiếm Khoa theo mã lớp", notes = "API này sẽ tìm kiếm khoa thông qua mã lớp.")
+	@GetMapping(
+			produces = {
+					MediaType.APPLICATION_JSON_VALUE
+			},
+			path = {"/api/findMajorByClassCode"}
+	)
+	public Map<String, Object> findMajorByClassCode(@ApiParam(value = "Mã lớp", required = false) @RequestParam(required = true) String classCode) {
+		try {
+			MajorEntity major = majorService.findMajorByClassCode(classCode);
+			
+			MajorDTO MajorDto = majorConverter.toDTO(major);
+			
+			if(MajorDto == null) return null;
+			
+			return ResultMap.createResultMap("Success", MajorDto, "Kết quả Khoa");
+		}catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
 	@ApiOperation(value = "Thêm Khoa", notes = "API này cho phép thêm khoa vào hệ thống")
 	@PostMapping(
 			consumes = {

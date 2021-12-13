@@ -17,9 +17,7 @@ public class ClassDTO extends BaseDTO {
 	@JsonIgnore
 	private TeacherDTO teacher;
 	
-	@JsonIgnore
 	private List<StudentDTO> students = new ArrayList<StudentDTO>();
 	
-	@JsonIgnore
 	private MajorDTO major;
 }

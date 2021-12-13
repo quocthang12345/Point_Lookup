@@ -10,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.PointLookup.model.dto.MajorDTO;
+import com.PointLookup.model.entity.ClassEntity;
 import com.PointLookup.model.entity.MajorEntity;
+import com.PointLookup.repository.IClassRepository;
 import com.PointLookup.repository.IMajorRepository;
 import com.PointLookup.util.ConverterUtil;
 
@@ -21,6 +23,9 @@ public class MajorService implements IMajorService {
 	
 	@Autowired
 	private IMajorRepository majorRepository;
+	
+	@Autowired
+	private IClassRepository classRepository;
 	
 	@Transactional
 	@Override
@@ -95,6 +100,24 @@ public class MajorService implements IMajorService {
 		try {
 			if(majorCode == null) return null;
 			MajorEntity major = majorRepository.findByMajorCode(majorCode);
+			return major;
+		}catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	@Override
+	public MajorEntity findMajorByClassCode(String classCode) {
+		try {
+			if(classCode == null) return null;
+			
+			ClassEntity classes = classRepository.findByClassCode(classCode);
+			
+			if(classes == null) return null;
+			
+			MajorEntity major = classes.getMajor();
+			
 			return major;
 		}catch(Exception e) {
 			e.printStackTrace();

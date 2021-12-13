@@ -1,5 +1,7 @@
 package com.PointLookup.controller;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +64,35 @@ public class StudentController {
 		}catch(Exception e) {
 			e.printStackTrace();
 			return ResultMap.createResultMap("Error", null, "Tìm kiếm thất bại hoặc sinh viên không tồn tại");
+		}
+	}
+	
+	@ApiOperation(value = "Tìm kiếm danh sách sinh viên bằng mã lớp", notes = "API này sẽ tìm kiếm danh sách sinh viên thông qua mã lớp")
+	@GetMapping(
+			produces = {
+					MediaType.APPLICATION_JSON_VALUE
+			},
+			path = {"/api/findStudentByClassCode"}
+	)
+	public Map<String, Object> findStudentByClassCode(@ApiParam(value = "Mã lớp", required = true) @RequestParam String classCode) {
+		try {
+			if(classCode == null) {
+				return ResultMap.createResultMap("Error", null, "Tham số truyền vào rỗng");
+			}
+			List<StudentEntity> students = studentService.findListByClassCode(classCode);
+			
+			if(students == null) return ResultMap.createResultMap("Error", null, "Danh sách sinh viên rỗng");
+			
+			List<StudentDTO> listStudentDto = new ArrayList<StudentDTO>();
+			
+			students.forEach(student -> {
+				listStudentDto.add(studentConverter.toDTO(student));
+			});
+			
+			return ResultMap.createResultMap("Success", listStudentDto, "Danh sách sinh viên");
+		}catch(Exception e) {
+			e.printStackTrace();
+			return ResultMap.createResultMap("Error", null, "Tìm kiếm thất bại hoặc danh sách sinh viên rỗng");
 		}
 	}
 	

@@ -1,5 +1,6 @@
 package com.PointLookup.service.score;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -129,6 +130,44 @@ public class ScoreService implements IScoreService {
 			if(listScore == null) return null;
 			
 			return listScore;
+		}catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	@Override
+	public List<ScoreEntity> updateListScoreToSubjectOfListStudent(List<ScoreDTO> scoreDto) {
+		try {
+			if(scoreDto.size() <= 0) return null;
+			
+			List<ScoreEntity> result = new ArrayList<ScoreEntity>();
+			
+			scoreDto.forEach(score -> {
+				ScoreEntity scoreUpdate = scoreConverter.toEntity(score);
+				
+				SubjectEntity subject = subjectRepository.findBySubjectCode(score.getSubjects().getSubjectCode());
+				
+				if(subject == null) return;
+				
+				StudentEntity student = studentRepository.findByStudentCode(score.getStudents().getStudentCode());
+				
+				if(student == null) return;
+				
+				ScoreEntity scoreIsUpdate = scoreRepository.findByStudent_IdAndSubject_Id(student.getId(), subject.getId());
+				
+				if(scoreIsUpdate == null) return;
+				
+				scoreConverter.merge(scoreUpdate, scoreIsUpdate);
+				
+				result.add(scoreIsUpdate);
+			});
+			
+			if(result.size() <=0 ) return null;
+			
+			List<ScoreEntity> scores = scoreRepository.saveAll(result);
+			
+			return scores;
 		}catch(Exception e) {
 			e.printStackTrace();
 			return null;

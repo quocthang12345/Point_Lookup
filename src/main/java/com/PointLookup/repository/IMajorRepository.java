@@ -14,4 +14,5 @@ public interface IMajorRepository extends JpaRepository<MajorEntity, Long> {
 	void deleteByMajorCode(String majorCode);
 	
 	MajorEntity findByMajorCode(String majorCode);
+	
 }

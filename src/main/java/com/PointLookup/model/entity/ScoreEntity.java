@@ -19,19 +19,19 @@ public class ScoreEntity extends BaseEntity{
 	
 	@ApiModelProperty(dataType = "double" , value = "Điểm chuyên cần")
 	@Column(name = "hardWorkScore")
-	private double hardWorkScore;
+	private Double hardWorkScore;
 	
 	@ApiModelProperty(dataType = "double" , value = "Điểm bài tập")
 	@Column(name = "assignmentScore")
-	private double assignmentScore;
+	private Double assignmentScore;
 	
 	@ApiModelProperty(dataType = "double" , value = "Điểm giữa kì")
 	@Column(name = "midtermScore")
-	private double midtermScore;
+	private Double midtermScore;
 	
 	@ApiModelProperty(dataType = "double" , value = "Điểm cuối kì")
 	@Column(name = "FinalScore")
-	private double FinalScore;
+	private Double FinalScore;
 	
 	@ApiModelProperty(hidden = true)
 	@ManyToOne(fetch = FetchType.EAGER)

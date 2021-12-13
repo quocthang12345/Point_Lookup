@@ -121,7 +121,7 @@ public class ScoreController {
 		}
 	}
 	
-	@ApiOperation(value = "Thêm điểm môn học cho sinh viên", notes = "API này sẽ thêm điểm môn học cho sinh viên trong hệ thống")
+	@ApiOperation(value = "Cập nhật điểm môn học cho sinh viên", notes = "API này sẽ thêm điểm môn học cho sinh viên trong hệ thống")
 	@PutMapping(
 		consumes = {
 			MediaType.APPLICATION_JSON_VALUE
@@ -137,6 +137,30 @@ public class ScoreController {
 			}
 			
 			ScoreEntity score = scoreService.updateScoreToSubjectOfStudent(subjectCode, studentCode, scoreDto);
+			
+			if(score == null) return new ResponseEntity<String>("Cập nhật thất bại", HttpStatus.BAD_REQUEST);
+			
+			return new ResponseEntity<String>("Cập nhật thành công", HttpStatus.OK);
+		}catch(Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<String>("Đã có lỗi trong khi chạy", HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@ApiOperation(value = "Cập nhât tất cả điểm môn học cho sinh viên", notes = "API này sẽ Cập nhât tất cả điểm môn học cho sinh viên trong hệ thống")
+	@PutMapping(
+		consumes = {
+			MediaType.APPLICATION_JSON_VALUE
+		},
+		path = {"/api/updateManyScore"}
+	)
+	public ResponseEntity<String> UpdateListScoreToSubjectOfListStudent(@ApiParam(value = "scoreDto",required = true) @RequestBody List<ScoreDTO> scoreDto){
+		try {
+			if(scoreDto == null && scoreDto.size() <= 0) {
+				return new ResponseEntity<String>("Giá trị truyền vào đang rỗng", HttpStatus.BAD_REQUEST);
+			}
+			
+			List<ScoreEntity> score = scoreService.updateListScoreToSubjectOfListStudent(scoreDto);
 			
 			if(score == null) return new ResponseEntity<String>("Cập nhật thất bại", HttpStatus.BAD_REQUEST);
 			

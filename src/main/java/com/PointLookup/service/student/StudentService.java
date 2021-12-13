@@ -1,10 +1,14 @@
 package com.PointLookup.service.student;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.PointLookup.model.dto.StudentDTO;
+import com.PointLookup.model.entity.ClassEntity;
 import com.PointLookup.model.entity.StudentEntity;
+import com.PointLookup.repository.IClassRepository;
 import com.PointLookup.repository.IStudentRepository;
 
 @Service
@@ -12,6 +16,9 @@ public class StudentService implements IStudentService {
 
 	@Autowired
 	private IStudentRepository studentRepository;
+	
+	@Autowired
+	private IClassRepository classRepository;
 	
 	
 	@Override
@@ -55,6 +62,24 @@ public class StudentService implements IStudentService {
 		}catch(Exception e) {
 			e.printStackTrace();
 			return false;
+		}
+	}
+
+	@Override
+	public List<StudentEntity> findListByClassCode(String classCode) {
+		try {
+			if(classCode == null) return null;
+			
+			ClassEntity classes = classRepository.findByClassCode(classCode);
+			
+			if(classes == null) return null;
+			
+			List<StudentEntity> students = classes.getStudent();
+			
+			return students;
+		}catch(Exception e) {
+			e.printStackTrace();
+			return null;
 		}
 	}
 

@@ -13,4 +13,6 @@ public interface IScoreService {
 	ScoreEntity findBySubjectOfStudent(String subjectCode, String studentCode);
 	
 	List<ScoreEntity> findByAllSubjectOfStudent(String studentCode);
+
+	List<ScoreEntity> updateListScoreToSubjectOfListStudent(List<ScoreDTO> scoreDto);
 }

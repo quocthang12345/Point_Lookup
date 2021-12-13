@@ -15,4 +15,6 @@ public interface IMajorService {
 	boolean deleteByMajorCode(String majorCode);
 	
 	MajorEntity findByMajorCode(String majorCode);
+
+	MajorEntity findMajorByClassCode(String classCode);
 }
