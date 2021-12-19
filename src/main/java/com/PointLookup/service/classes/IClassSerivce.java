@@ -12,4 +12,6 @@ public interface IClassSerivce {
 	ClassEntity insertClass(ClassDTO classes, String majorName, String userNameTeacher);
 	
 	ClassEntity addStudentInClass(String studentCode, String classCode);
+
+	ClassEntity updateClassName(String className, String classCode);
 }

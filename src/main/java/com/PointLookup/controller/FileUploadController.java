@@ -40,7 +40,7 @@ public class FileUploadController {
 			  },
 			 path = "/api/uploadStudentInClass"
 			  )
-	  public Map<String, Object> uploadFileCSVStudentToClass(@RequestParam("file") MultipartFile file) {
+	  public Map<String, Object> uploadFileCSVStudentToClass(@RequestParam("file") MultipartFile file, @RequestParam("classCode") String classCode) {
 	    if(file == null) {
 	    	return ResultMap.createResultMap("Error", null, "file đang null");
 	    }
@@ -67,7 +67,7 @@ public class FileUploadController {
 	          }
 	          
 	          result.forEach(item -> {
-	        	 classService.addStudentInClass(item.get(0), item.get(1)); 
+	        	 classService.addStudentInClass(item.get(0), classCode); 
 	          });
 	         
 	          if(allData.size() > 0) return ResultMap.createResultMap("Success", null, "Đã thêm thành công");  
@@ -84,7 +84,7 @@ public class FileUploadController {
 			  },
 			 path = "/api/uploadStudentInSubject"
 			  )
-	  public Map<String, Object> uploadFileCSVStudentToSubject(@RequestParam("file") MultipartFile file) {
+	  public Map<String, Object> uploadFileCSVStudentToSubject(@RequestParam("file") MultipartFile file, @RequestParam("subjectCode") String subjectCode) {
 	    if(file == null) {
 	    	return ResultMap.createResultMap("Error", null, "file đang null");
 	    }
@@ -114,7 +114,7 @@ public class FileUploadController {
 	        	 StudentDTO student = new StudentDTO();
 	        	 student.setStudentCode(item.get(0));
 	        	 student.setClassCode(item.get(1));
-	        	 subjectService.addListStudentInSubject(student, item.get(2));
+	        	 subjectService.addListStudentInSubject(student, subjectCode);
 	          });
 	         
 	          if(allData.size() > 0) return ResultMap.createResultMap("Success", null, "Đã thêm thành công");  

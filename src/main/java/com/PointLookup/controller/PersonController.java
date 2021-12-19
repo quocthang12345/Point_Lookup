@@ -31,7 +31,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @RestController
-@Api(tags = "PersonController", value = "Thông tin người dùng")
+@Api(tags = "PersonController", description = "Thông tin người dùng")
 public class PersonController {
 
 	@Autowired

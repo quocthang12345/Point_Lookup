@@ -3,8 +3,6 @@ package com.PointLookup.controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +29,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 @RestController
-@Api(tags = "SubjectController", value = "Thông tin môn học")
+@Api(tags = "SubjectController", description = "Thông tin môn học")
 public class SubjectController {
 	
 	@Autowired

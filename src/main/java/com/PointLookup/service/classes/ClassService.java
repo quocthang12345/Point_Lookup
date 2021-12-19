@@ -130,5 +130,25 @@ public class ClassService implements IClassSerivce {
 			return null;
 		}
 	}
+
+	@Override
+	public ClassEntity updateClassName(String className, String classCode) {
+		try {
+			if(className == null && classCode == null) return null;
+			
+			ClassEntity classEntity = classRepository.findByClassCode(classCode);
+			
+			if(classEntity == null) return null;
+			
+			classEntity.setClassName(className);
+			
+			ClassEntity classUpdated = classRepository.save(classEntity);
+			
+			return classUpdated;
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 	
 }

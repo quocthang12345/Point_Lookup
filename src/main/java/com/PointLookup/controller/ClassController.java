@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,7 +26,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 @RestController
-@Api(tags = "ClassController", value = "Thông tin Lơp")
+@Api(tags = "ClassController", description = "Thông tin Lớp")
 public class ClassController {
 	
 	@Autowired
@@ -101,6 +102,28 @@ public class ClassController {
 				return new ResponseEntity<String>("Thêm thất bại", HttpStatus.BAD_REQUEST);
 			}
 			return new ResponseEntity<String>("Thêm thành công", HttpStatus.OK);
+		}catch(Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<String>("Đã có lỗi trong khi chạy", HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@ApiOperation(value = "Cập nhật tên lớp", notes = "API này cho phép cập nhật tên lớp trong hệ thống")
+	@PutMapping(
+			path = {"/api/updateClassName"}
+	)
+	public ResponseEntity<String> updateClassName(@ApiParam(value = "Mã lớp",required = true) @RequestParam String classCode,
+			@ApiParam(value = "Tên lớp cần thay đổi",required = true) @RequestParam String className){
+		try {
+			if(className == null && classCode == null) {
+				return new ResponseEntity<String>("Tham số truyền vào null", HttpStatus.BAD_REQUEST); 
+			}
+			ClassEntity classes = classService.updateClassName(className, classCode);
+			
+			if(classes == null) {
+				return new ResponseEntity<String>("Cập nhật thất bại", HttpStatus.BAD_REQUEST);
+			}
+			return new ResponseEntity<String>("Cập nhật thành công", HttpStatus.OK);
 		}catch(Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<String>("Đã có lỗi trong khi chạy", HttpStatus.BAD_REQUEST);

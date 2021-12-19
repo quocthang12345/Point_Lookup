@@ -28,7 +28,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 @RestController
-@Api(tags = "ScoreController", value = "Thông tin điểm")
+@Api(tags = "ScoreController", description = "Thông tin điểm")
 public class ScoreController {
 	@Autowired
 	private IScoreService scoreService;
